@@ -1,4 +1,7 @@
+#python compare_smi.py ../data.xlsx minnesota.xlsx 
+
 python $SCRIPTS/Plot/plot_xy.py -f linear.dat -l linear -o linear.png --correlation --xlabel="Experiment [kcal/mol]" --ylabel="Modell [kcal/mol]"  --scatter --nostyle
+
 python $SCRIPTS/Plot/plot_xy.py -f elba.dat -l linear -o elba.png --correlation --xlabel="Experiment [kcal/mol]" --ylabel="Modell [kcal/mol]"  --scatter --nostyle
 python $SCRIPTS/Plot/plot_xy.py -f linear.dat elba.dat -l Statistik Elba  -o linear-elba.png --correlation --xlabel="Experiment [kcal/mol]" --ylabel="Modell [kcal/mol]"  --scatter --nostyle
 
