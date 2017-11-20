@@ -1,0 +1,57 @@
+---
+title: "An OLS model of water/octanol partition coefficients"
+output: html_notebook
+---
+
+First we read the data from the Excel sheet and look what data we have
+
+```{r}
+library(readxl)
+data <- read_excel("../data.xlsx")
+colnames(data)
+```
+
+The "Nr", "Smiles", "CAS" and "dGow" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
+
+Let's look into the colinearity between the molecular properties
+
+```{r}
+library(ggplot2)
+library(reshape2)
+
+cormat<-melt(cor(data[,seq(5,dim(data)[2])]))
+
+ii<-which(cormat[,"value"]==1)
+maxv<-max(cormat[-ii,"value"])
+maxi<-which(cormat["value"]==maxv)[1]
+
+ggplot(data = cormat, aes(x=Var1, y=Var2, fill=value)) + scale_fill_gradient2(low="green", high="red", mid="white", midpoint=0, limit=c(-1,1), space="Lab", name="Pearson\nCorrelation") + xlab("") + ylab("")+ geom_tile() + theme_minimal() +  theme(axis.text.x=element_text(angle=45, vjust=1, size=10, hjust=1), axis.text.y = element_text(size=10))
+
+
+```
+
+The maxium R value is `r round(cormat[maxi,"value"],2)` for variables "`r cormat[maxi,"Var1"]`"" and "`r cormat[maxi,"Var2"]`".
+
+We can plot the different variables against the response variable "dGow"
+
+```{r}
+p1<-ggplot(data=data, aes(x=Weight, y=dGow)) + geom_point() 
+p2<-ggplot(data=data, aes(x=Heavies, y=dGow)) + geom_point()
+p3<-ggplot(data=data, aes(x=Carbons, y=dGow)) + geom_point() 
+p4<-ggplot(data=data, aes(x=Polar, y=dGow)) + geom_point() 
+p5<-ggplot(data=data, aes(x=Rings, y=dGow)) + geom_point()
+p6<-ggplot(data=data, aes(x=HDonors, y=dGow)) + geom_point() 
+p7<-ggplot(data=data, aes(x=HAcceptors, y=dGow)) + geom_point() 
+library(grid)
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+```
+
+
+Let's try making a simple OLS using all the variables
+
+```{r}
+mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data)
+summary(mm)
+```
+
