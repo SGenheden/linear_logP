@@ -1,0 +1,118 @@
+---
+title: "A logistic + OLS model of water/octanol partition coefficients"
+output: html_notebook
+---
+
+First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "dGow" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
+
+```{r}
+library(readxl)
+data <- read_excel("../data.xlsx")
+colnames(data)
+```
+
+The "Nr", "Smiles", "CAS" and "dGow" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
+
+Next, we will exclude the molecules that are also in the Minnesota valdiation test set.
+
+```{r}
+ii<-read.table("../overlap.dat")
+data<-data[-ii$V1,]
+```
+
+Let's try to do a logistic regression on being positive!. I.e. we will only try to predict the sign.
+
+```{r}
+data$sign<-as.integer(data$dGow>0)
+gg<-glm(sign~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,'binomial',data=data)
+summary(gg)
+selg<-step(gg,trace=F)
+print(summary(selg))
+par(mfrow=c(2,2))
+plot(selg)
+```
+
+Plot a dose response
+
+```{r}
+logit<-function(z) {ll<-log(z/(1-z))}
+plot(logit(selg$fit),data$sign,xlab="linear predictor",ylab="sign")
+lines(sort(logit(selg$fit)),selg$fit[sort.list(selg$fit)])
+```
+
+And check its classification
+
+```{r}
+pp<-predict(selg,type="response")
+pp[pp<.5]<-0
+pp[pp>=.5]<-1
+table(pp,data$sign)
+print(c("Misclassification error=", round(sum(pp!=data$sign)/length(data$sign),3)))
+```
+
+Plot the data anew but separate positive and negative values
+
+```{r}
+data_pos<-data[data$dGow>0,]
+data_pos$Weight<-log10(data_pos$Weight)
+data_pos[data_pos$Heavies>15,]$Heavies<-15
+data_pos[data_pos$Polar>8,]$Polar<-8
+p1<-ggplot(data=data_pos, aes(x=Weight, y=dGow)) + geom_point() 
+p2<-ggplot(data=data_pos, aes(x=Heavies, y=dGow)) + geom_point()
+p3<-ggplot(data=data_pos, aes(x=Carbons, y=dGow)) + geom_point() 
+p4<-ggplot(data=data_pos, aes(x=Polar, y=dGow)) + geom_point() 
+p5<-ggplot(data=data_pos, aes(x=Rings, y=dGow)) + geom_point()
+p6<-ggplot(data=data_pos, aes(x=HDonors, y=dGow)) + geom_point() 
+p7<-ggplot(data=data_pos, aes(x=HAcceptors, y=dGow)) + geom_point() 
+library(grid)
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+```
+
+and negative data
+
+```{r}
+data_neg<-data[data$dGow<0,]
+data_neg$Weight<-log10(data_neg$Weight)
+p1<-ggplot(data=data_neg, aes(x=Weight, y=dGow)) + geom_point() 
+p2<-ggplot(data=data_neg, aes(x=Heavies, y=dGow)) + geom_point()
+p3<-ggplot(data=data_neg, aes(x=Carbons, y=dGow)) + geom_point() 
+p4<-ggplot(data=data_neg, aes(x=Polar, y=dGow)) + geom_point() 
+p5<-ggplot(data=data_neg, aes(x=Rings, y=dGow)) + geom_point()
+p6<-ggplot(data=data_neg, aes(x=HDonors, y=dGow)) + geom_point() 
+p7<-ggplot(data=data_neg, aes(x=HAcceptors, y=dGow)) + geom_point() 
+library(grid)
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+```
+
+Create an OLS model for the positive molecules
+
+```{r}
+mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data_pos)
+summary(mm)
+par(mfrow=c(2,2))
+plot(mm)
+```
+
+And then on the negative onese
+
+```{r}
+mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data_neg)
+summary(mm)
+par(mfrow=c(2,2))
+plot(mm)
+```
+
+Lets try prediction on Minnesota data
+
+```{r}
+sota<-read_excel("../phys/minnesota.xlsx")
+sota$sign<-as.integer(sota$dGow>0)
+pp2<-predict(selg, sota[c("Weight","Carbons","Polar","HDonors","HAcceptors")], type="response")
+pp2[pp2<.5]<-0
+pp2[pp2>=.5]<-1
+table(pp2,sota$sign)
+print(c("Misclassification error=", round(sum(pp2!=sota$sign)/length(sota$sign),3)))
+```
+

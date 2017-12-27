@@ -3,7 +3,7 @@ title: "An OLS model of water/octanol partition coefficients"
 output: html_notebook
 ---
 
-First we read the data from the Excel sheet and look what data we have
+First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "dGow" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
 
 ```{r}
 library(readxl)
@@ -12,6 +12,13 @@ colnames(data)
 ```
 
 The "Nr", "Smiles", "CAS" and "dGow" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
+
+Next, we will exclude the molecules that are also in the Minnesota valdiation test set.
+
+```{r}
+ii<-read.table("../overlap.dat")
+data<-data[-ii$V1,]
+```
 
 Let's look into the colinearity between the molecular properties
 
@@ -35,23 +42,105 @@ The maxium R value is `r round(cormat[maxi,"value"],2)` for variables "`r cormat
 We can plot the different variables against the response variable "dGow"
 
 ```{r}
-p1<-ggplot(data=data, aes(x=Weight, y=dGow)) + geom_point() 
-p2<-ggplot(data=data, aes(x=Heavies, y=dGow)) + geom_point()
-p3<-ggplot(data=data, aes(x=Carbons, y=dGow)) + geom_point() 
-p4<-ggplot(data=data, aes(x=Polar, y=dGow)) + geom_point() 
-p5<-ggplot(data=data, aes(x=Rings, y=dGow)) + geom_point()
-p6<-ggplot(data=data, aes(x=HDonors, y=dGow)) + geom_point() 
-p7<-ggplot(data=data, aes(x=HAcceptors, y=dGow)) + geom_point() 
+p1<-ggplot(data=data, aes(x=Weight, y=Partition)) + geom_point() 
+p2<-ggplot(data=data, aes(x=Heavies, y=Partition)) + geom_point()
+p3<-ggplot(data=data, aes(x=Carbons, y=Partition)) + geom_point() 
+p4<-ggplot(data=data, aes(x=Polar, y=Partition)) + geom_point() 
+p5<-ggplot(data=data, aes(x=Rings, y=Partition)) + geom_point()
+p6<-ggplot(data=data, aes(x=HDonors, y=Partition)) + geom_point() 
+p7<-ggplot(data=data, aes(x=HAcceptors, y=Partition)) + geom_point() 
+p8<-ggplot(data=data, aes(x=GI, y=Partition)) + geom_point() 
 library(grid)
 library(gridExtra)
-grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
+```
+
+And some boxplots
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(data$Heavies, ylab="Heavies")
+boxplot(data$Polar, ylab="Polar")
 ```
 
 
 Let's try making a simple OLS using all the variables
 
 ```{r}
-mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data)
+mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data)
 summary(mm)
 ```
+
+And plot the summary graphs
+
+```{r}
+par(mfrow=c(2,2))
+plot(mm)
+```
+
+
+Let's do some transforms so we can fix the constant variance 
+
+```{r}
+data2<-data
+data2$Weight<-log10(data$Weight)
+data2[data$Heavies>15,]$Heavies<-15
+data2[data$Polar>8,]$Polar<-8
+data2$HDonors<-data$HDonors
+data2$GI<-log10(data$GI)
+p1<-ggplot(data=data2, aes(x=Weight, y=Partition)) + geom_point() 
+p2<-ggplot(data=data2, aes(x=Heavies, y=Partition)) + geom_point()
+p3<-ggplot(data=data2, aes(x=Carbons, y=Partition)) + geom_point() 
+p4<-ggplot(data=data2, aes(x=Polar, y=Partition)) + geom_point() 
+p5<-ggplot(data=data2, aes(x=Rings, y=Partition)) + geom_point()
+p6<-ggplot(data=data2, aes(x=HDonors, y=Partition)) + geom_point() 
+p7<-ggplot(data=data2, aes(x=HAcceptors, y=Partition)) + geom_point() 
+p8<-ggplot(data=data2, aes(x=GI, y=Partition)) + geom_point() 
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
+```
+
+And redo the OLS modelling
+
+```{r}
+mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data2)
+summary(mm)
+par(mfrow=c(2,2))
+plot(mm)
+```
+
+Now it is time to try data selection - which explanatory variables are most interesting? We will only use backward selection here
+
+```{r}
+mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data2)
+mm_stepped<-step(mm,trace=T)
+summary(mm_stepped)
+```
+
+Plot the usualy diagnostic plots
+
+```{r}
+par(mfrow=c(2,2))
+plot(mm_stepped)
+```
+
+
+Now validate the model on the Minnesota set
+
+```{r}
+sota<-read_excel("../minnesota.xlsx")
+sota$Weight<-log10(sota$Weight)
+sota$GI<-log10(sota$GI)
+f<-sota[c("Partition")]
+f$pred<-predict(mm_stepped, sota[c("Weight","Carbons","HDonors","HAcceptors","GI")])
+```
+
+Some simple statistics of this model is MAD=`r round(mean(abs(f$Partition-f$pred)),2)` kcal/mol and $R$=`r round(cor(f$Partition,f$pred),2)`.
+
+and a correlation graph looks like this 
+
+```{r}
+library(ggplot2)
+qplot(Partition, pred, data=f, xlab="Experimental [kcal/mol]", ylab="Predicted [kcal/mol]", xlim=c(-5,8), ylim=c(-5,8)) + theme(aspect.ratio=1)
+```
+
 
