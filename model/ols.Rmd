@@ -1,17 +1,20 @@
 ---
 title: "An OLS model of water/octanol partition coefficients"
-output: html_notebook
+output:
+  html_notebook: default
+  pdf_document: default
+  word_document: default
 ---
 
-First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "dGow" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
+First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "Partition" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
 
 ```{r}
 library(readxl)
-data <- read_excel("../data.xlsx")
+data <- read_excel("../training.xlsx")
 colnames(data)
 ```
 
-The "Nr", "Smiles", "CAS" and "dGow" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
+The "Nr", "Smiles", "CAS" and "Partition" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
 
 Next, we will exclude the molecules that are also in the Minnesota valdiation test set.
 
@@ -39,35 +42,35 @@ ggplot(data = cormat, aes(x=Var1, y=Var2, fill=value)) + scale_fill_gradient2(lo
 
 The maxium R value is `r round(cormat[maxi,"value"],2)` for variables "`r cormat[maxi,"Var1"]`"" and "`r cormat[maxi,"Var2"]`".
 
-We can plot the different variables against the response variable "dGow"
+We can plot the different variables against the response variable "Partition". This will help us identify necessary transformations.
 
 ```{r}
 p1<-ggplot(data=data, aes(x=Weight, y=Partition)) + geom_point() 
-p2<-ggplot(data=data, aes(x=Heavies, y=Partition)) + geom_point()
-p3<-ggplot(data=data, aes(x=Carbons, y=Partition)) + geom_point() 
-p4<-ggplot(data=data, aes(x=Polar, y=Partition)) + geom_point() 
+p2<-ggplot(data=data, aes(x=HA, y=Partition)) + geom_point()
+p3<-ggplot(data=data, aes(x=CA, y=Partition)) + geom_point() 
+p4<-ggplot(data=data, aes(x=PA, y=Partition)) + geom_point() 
 p5<-ggplot(data=data, aes(x=Rings, y=Partition)) + geom_point()
-p6<-ggplot(data=data, aes(x=HDonors, y=Partition)) + geom_point() 
-p7<-ggplot(data=data, aes(x=HAcceptors, y=Partition)) + geom_point() 
+p6<-ggplot(data=data, aes(x=HBD, y=Partition)) + geom_point() 
+p7<-ggplot(data=data, aes(x=HBA, y=Partition)) + geom_point() 
 p8<-ggplot(data=data, aes(x=GI, y=Partition)) + geom_point() 
 library(grid)
 library(gridExtra)
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
 ```
 
-And some boxplots
+And some boxplots of the "HA" and "PA" variables.
 
 ```{r}
 par(mfrow=c(1,2))
-boxplot(data$Heavies, ylab="Heavies")
-boxplot(data$Polar, ylab="Polar")
+boxplot(data$HA, ylab="HA")
+boxplot(data$PA, ylab="PA")
 ```
 
 
 Let's try making a simple OLS using all the variables
 
 ```{r}
-mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data)
+mm<-lm(Partition~Weight+HA+CA+PA+Rings+HBD+HBA+GI,data=data)
 summary(mm)
 ```
 
@@ -79,22 +82,21 @@ plot(mm)
 ```
 
 
-Let's do some transforms so we can fix the constant variance 
+Let's do some transforms so we can fix the constant variance. We will log10 transform "Weight" and "GI", and cut-off "HA" and "PA"
 
 ```{r}
 data2<-data
 data2$Weight<-log10(data$Weight)
-data2[data$Heavies>15,]$Heavies<-15
-data2[data$Polar>8,]$Polar<-8
-data2$HDonors<-data$HDonors
+data2[data$HA>15,]$HA<-15
+data2[data$PA>8,]$PA<-8
 data2$GI<-log10(data$GI)
 p1<-ggplot(data=data2, aes(x=Weight, y=Partition)) + geom_point() 
-p2<-ggplot(data=data2, aes(x=Heavies, y=Partition)) + geom_point()
-p3<-ggplot(data=data2, aes(x=Carbons, y=Partition)) + geom_point() 
-p4<-ggplot(data=data2, aes(x=Polar, y=Partition)) + geom_point() 
+p2<-ggplot(data=data2, aes(x=HA, y=Partition)) + geom_point()
+p3<-ggplot(data=data2, aes(x=CA, y=Partition)) + geom_point() 
+p4<-ggplot(data=data2, aes(x=PA, y=Partition)) + geom_point() 
 p5<-ggplot(data=data2, aes(x=Rings, y=Partition)) + geom_point()
-p6<-ggplot(data=data2, aes(x=HDonors, y=Partition)) + geom_point() 
-p7<-ggplot(data=data2, aes(x=HAcceptors, y=Partition)) + geom_point() 
+p6<-ggplot(data=data2, aes(x=HBD, y=Partition)) + geom_point() 
+p7<-ggplot(data=data2, aes(x=HBA, y=Partition)) + geom_point() 
 p8<-ggplot(data=data2, aes(x=GI, y=Partition)) + geom_point() 
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
 ```
@@ -102,16 +104,16 @@ grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
 And redo the OLS modelling
 
 ```{r}
-mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data2)
+mm<-lm(Partition~Weight+HA+CA+PA+Rings+HBD+HBA+GI,data=data2)
 summary(mm)
-par(mfrow=c(2,2))
-plot(mm)
+library(ggfortify)
+autoplot(mm, which=c(1,2,4))
 ```
 
-Now it is time to try data selection - which explanatory variables are most interesting? We will only use backward selection here
+Now it is time to try data selection - which explanatory variables are most interesting? We will use backward search based on AIC here
 
 ```{r}
-mm<-lm(Partition~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors+GI,data=data2)
+mm<-lm(Partition~Weight+HA+CA+PA+Rings+HBD+HBA+GI,data=data2)
 mm_stepped<-step(mm,trace=T)
 summary(mm_stepped)
 ```
@@ -123,24 +125,96 @@ par(mfrow=c(2,2))
 plot(mm_stepped)
 ```
 
+Let's try to select a model based on an exhaustive search and the AIC criterion
+
+```{r}
+library(leaps)
+xx<-as.data.frame(data2)[,c("Weight","HA","CA","PA","Rings","HBD","HBA","GI")]
+yy<-as.data.frame(data2)[,"Partition"]
+# Enumerate all models
+rleaps<-regsubsets(xx,yy,int=T,nbest=1000,nvmax=dim(xx)[2]+1,really.big=T,method=c("ex")) 
+cleaps<-summary(rleaps,matrix=T) 
+# True/False matrix. The r-th is a True/False statement about which
+Models<-cleaps$which
+# Add a model with only the intercept
+Models<-rbind(c(T,rep(F,dim(xx)[2])),Models) 
+# Calculate AIC
+nullrss<-sum((yy-mean(yy))^2)
+RSS<-cleaps$rss
+RSS<-c(nullrss,RSS)
+modsize<-apply(Models==T,1,sum)
+AIC<-length(yy)*log(RSS)+2*modsize
+```
+
+Plot the AIC value against the model size and print out the model selected with 6, 7 or 8 variables.
+
+```{r}
+qplot(modsize, AIC, xlab="Model size", ylab="AIC")+scale_x_discrete(limits=c("1","2","3","4","5","6","7","8","9","10"))
+print(rbind(Models[AIC==min(AIC[modsize==6]),],Models[AIC==min(AIC[modsize==7]),],Models[AIC==min(AIC[modsize==8]),]))
+```
+
 
 Now validate the model on the Minnesota set
 
 ```{r}
-sota<-read_excel("../minnesota.xlsx")
+sota<-read_excel("../testing.xlsx")
 sota$Weight<-log10(sota$Weight)
 sota$GI<-log10(sota$GI)
 f<-sota[c("Partition")]
-f$pred<-predict(mm_stepped, sota[c("Weight","Carbons","HDonors","HAcceptors","GI")])
+f$pred<-predict(mm_stepped, sota[c("Weight","CA","HBD","HBA","GI")])
+f$expvar="Five"
 ```
 
+Let's compute two other models with 6 and 7 explanatory variables and make predictions using the test set.
+
+```{r}
+mm_final2<-lm(Partition~Weight+CA+Rings+HBD+HBA+GI,data=data2)
+f2<-sota[c("Partition")]
+f2$pred<-predict(mm_final2, sota[c("Weight","CA","Rings","HBD","HBA","GI")])
+mm_final3<-lm(Partition~Weight+CA+PA+Rings+HBD+HBA+GI,data=data2)
+f2$expvar="Six"
+f3<-sota[c("Partition")]
+f3$pred<-predict(mm_final3, sota[c("Weight","CA","PA","Rings","HBD","HBA","GI")])
+f3$expvar="Seven"
+```
+
+
 Some simple statistics of this model is MAD=`r round(mean(abs(f$Partition-f$pred)),2)` kcal/mol and $R$=`r round(cor(f$Partition,f$pred),2)`.
+
+Some simple statistics of the model with 6 explanatory variable is MAD=`r round(mean(abs(f$Partition-f2$pred)),2)` kcal/mol and $R$=`r round(cor(f$Partition,f2$pred),2)`.
+
+and of the model with 7 explanatory variable is MAD=`r round(mean(abs(f$Partition-f3$pred)),2)` kcal/mol and $R$=`r round(cor(f$Partition,f3$pred),2)`
+
 
 and a correlation graph looks like this 
 
 ```{r}
 library(ggplot2)
 qplot(Partition, pred, data=f, xlab="Experimental [kcal/mol]", ylab="Predicted [kcal/mol]", xlim=c(-5,8), ylim=c(-5,8)) + theme(aspect.ratio=1)
+ggplot(rbind(f,f2,f3), aes(x=Partition, y=pred, color=expvar)) + geom_point() + xlab("Experimental [kcal/mol]") + ylab("Predicted [kcal/mol]") + xlim(-4,11) + ylim(-4,11) + theme(aspect.ratio=1)
 ```
 
+Attempt some LASSO regression
+
+```{r}
+library(lars)
+xx<-as.data.frame(data2)[,c("Weight","HA","CA","PA","Rings","HBD","HBA","GI")]
+xx<-as.matrix(cbind(rep(1, dim(data2)[1]), as.matrix(xx)))
+yy<-as.data.frame(data2)[,"Partition"]
+ll<-lars(xx, yy, intercept=F)
+summary(ll)
+print(ll)
+print(ll$beta[which.min(ll$Cp),])
+```
+
+And then prediction
+
+```{r}
+f4<-sota[c("Partition")]
+xs<-as.data.frame(sota)[,c("Weight","HA","CA","PA","Rings","HBD","HBA","GI")]
+xs<-as.matrix(cbind(rep(1, dim(sota)[1]), as.matrix(xs)))
+f4$pred<-xs%*%ll$beta[which.min(ll$Cp),]
+f4$expvar="Lasso"
+ggplot(rbind(f,f4), aes(x=Partition, y=pred, color=expvar)) + geom_point() + xlab("Experimental [kcal/mol]") + ylab("Predicted [kcal/mol]") + xlim(-4,11) + ylim(-4,11) + theme(aspect.ratio=1)
+```
 

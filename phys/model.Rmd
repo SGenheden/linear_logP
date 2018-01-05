@@ -3,58 +3,60 @@ title: "OLS model of water/octanol partition coefficients for solutes in the Min
 output: html_notebook
 ---
 
-First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "dGow" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
+This model was used in my docent lecture.
+
+First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "Partition" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
 
 ```{r}
 library(readxl)
-data <- read_excel("../data.xlsx")
-summary(data)
+data <- read_excel("../training.xlsx")
+colnames(data)
 ```
 
 We will add two derivate properties: the fraction of heavy atoms that are carbons and the total number of hydrogen-bond possibilities:
 
 ```{r}
-data$HBonds<-data$HDonors+data$HAcceptors
-data$Nonpolar<-data$Carbons/data$Heavies
+data$HBonds<-data$HBD+data$HBA
+data$Nonpolar<-data$CA/data$HA
 ```
 
 Some of solutes in the full set is also in the Minnesota databse and, therefore, we will have to exclude them from the model building. The indices of these rows have been placed in the file `overlap.dat` file by the `compare_smi.py` Python script. 
 
 ```{r}
-ii<-read.table("overlap.dat")
+ii<-read.table("../overlap.dat")
 data2<-data[-ii$V1,]
 ```
 
 Now we can create a simple OLS model based on subset of data not in the Minnesota databse. We will base the model on the columns "Weight", "HBonds" and "Nonpolar".
 
 ```{r}
-mm<-lm(dGow~Weight+HBonds+Nonpolar,data=data2)
+mm<-lm(Partition~Weight+HBonds+Nonpolar,data=data2)
 summary(mm)
 ```
 
 This seems like a decent model! Let's use it to predict partition coefficients for the solutes in the Minnesota database.
 
 ```{r}
-minisota<-read_excel("minnesota.xlsx")
-minisota$HBonds<-minisota$HDonors+minisota$HAcceptors
-minisota$Nonpolar<-minisota$Carbons/minisota$Heavies
-f<-minisota[c("dGow")]
+minisota<-read_excel("../testing.xlsx")
+minisota$HBonds<-minisota$HBD+minisota$HBA
+minisota$Nonpolar<-minisota$CA/minisota$HA
+f<-minisota[c("Partition")]
 f$pred<-predict(mm, minisota[c("Weight","HBonds","Nonpolar")])
 ```
 
-Some simple statistics of this model is MAD=`r round(mean(abs(f$dGow-f$pred)),2)` kcal/mol and $R^2$=`r round(cor(f$dGow,f$pred),2)`
+Some simple statistics of this model is MAD=`r round(mean(abs(f$Partition-f$pred)),2)` kcal/mol and $R^2$=`r round(cor(f$Partition,f$pred),2)`
 
 and a correlation graph looks like this 
 
 ```{r}
 library(ggplot2)
-qplot(dGow, pred, data=f, xlab="Experimental [kcal/mol]", ylab="Predicted [kcal/mol]", xlim=c(-4,8), ylim=c(-4,8)) + theme(aspect.ratio=1)
+qplot(Partition, pred, data=f, xlab="Experimental [kcal/mol]", ylab="Predicted [kcal/mol]", xlim=c(-4,8), ylim=c(-4,8)) + theme(aspect.ratio=1)
 ```
 
 This we can compare to the simulations method Elba, CG Martini and AA/CG Martini
 
 ```{r}
-ols<-data.frame(exp=f$dGow,pred=f$pred,model="OLS")
+ols<-data.frame(exp=f$Partition,pred=f$pred,model="OLS")
 elba<-read.table("elba.dat", col.names=c("exp","pred"))
 elba$model<-"Elba"
 martini1<-read.table("martini_cg.dat", col.names=c("exp","pred"))

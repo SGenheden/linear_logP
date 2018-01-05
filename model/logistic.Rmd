@@ -1,118 +1,355 @@
 ---
 title: "A logistic + OLS model of water/octanol partition coefficients"
-output: html_notebook
+output:
+  html_notebook: default
+  pdf_document: default
+  word_document: default
 ---
 
-First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "dGow" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
+First we will load in the data for the full set of molecules. The "Nr", "Smiles", "CAS" and "Partition" column is taken from the SI of the paper ["Automated Parametrization of the Coarse-Grained Martini Force Field for Small Organic" Molecules](http://pubs.acs.org/doi/suppl/10.1021/acs.jctc.5b00056) and the other columns have been filled in with the `collect_props.py` Python script.
 
 ```{r}
 library(readxl)
-data <- read_excel("../data.xlsx")
+data <- read_excel("../training.xlsx")
 colnames(data)
 ```
 
-The "Nr", "Smiles", "CAS" and "dGow" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
+The "Nr", "Smiles", "CAS" and "Partition" was taken from the SI of a published paper, and the other columns were filled in with a Python script.
 
-Next, we will exclude the molecules that are also in the Minnesota valdiation test set.
+Next, we will exclude the molecules that are also in the Minnesota valdiation test set. And we will also add the dependent variable "sign" to be used in the logistic regression.
 
 ```{r}
 ii<-read.table("../overlap.dat")
 data<-data[-ii$V1,]
+data$sign<-as.integer(data$Partition>0)
 ```
 
-Let's try to do a logistic regression on being positive!. I.e. we will only try to predict the sign.
+Let's try to do a logistic regression on being positive, i.e. we will only try to predict the sign. But first we will plot the log-odds of the individual response variables to see if the logit is a good link-function.
 
 ```{r}
-data$sign<-as.integer(data$dGow>0)
-gg<-glm(sign~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,'binomial',data=data)
+library(ggplot2)
+logit<-function(z) {ll<-log(z/(1-z))}
+calc_logodds<-function(dataset, yvar, xvar, uselog=F) {
+  x<-as.matrix(dataset[,c(xvar)])
+  if (uselog) {
+    x<-log10(x)
+  }
+  y<-as.matrix(dataset[,c(yvar)])
+  hh<-hist(x, plot=F)
+  x2<-x
+  for (kk in (1:length(hh$breaks)-1)) {
+    x2[x<=hh$breaks[kk+1] & x>hh$breaks[kk]]<-hh$mid[kk]
+  }
+  tt<-table(y,x2) 
+  logodds<-logit(tt[2,]/apply(tt,2,sum))
+  uniquex<-sort(unique(x2))
+  gg<-glm(y~x,"binomial")
+  pp<-predict(gg, response="link",se=T)
+  xt<-sort(x)
+  fitted<-pp$fit[sort.list(x)]
+  fitted_low<-(pp$fit-pp$se)[sort.list(x)]
+  fitted_upp<-(pp$fit+pp$se)[sort.list(x)]
+  pl<-ggplot() + geom_point(aes(x=uniquex, y=logodds)) + geom_line(aes(x=xt, y=fitted)) + geom_line(aes(x=xt, y=fitted_low), linetype = 2) + geom_line(aes(x=xt, y=fitted_upp), linetype = 2)+xlab(xvar)+ylab("log-odds")
+  return(list(uniquex=sort(unique(x2)), logodds=logodds, xt=sort(x), fit=fitted, fit_low=fitted_low, fit_upp=fitted_upp, plot=pl))
+}
+lo1<-calc_logodds(data, "sign", "Weight", uselog=T)
+lo2<-calc_logodds(data, "sign", "HA")
+lo3<-calc_logodds(data, "sign", "CA")
+lo4<-calc_logodds(data, "sign", "PA")
+lo5<-calc_logodds(data, "sign", "Rings")
+lo6<-calc_logodds(data, "sign", "HBD")
+lo7<-calc_logodds(data, "sign", "HBA")
+lo8<-calc_logodds(data, "sign", "GI", uselog=T)
+library(grid)
+library(gridExtra)
+grid.arrange(lo1$plot, lo2$plot, lo3$plot, lo4$plot, lo5$plot, lo6$plot, lo7$plot, lo8$plot, ncol=3)
+
+```
+
+Apart from some log-odds becoming infinite, most of the response variables seem to work with a logit function. I will remove "heavies". And "Weight" and "GI" seem to work slightly better if we log10-transform it.
+
+Now we can continue creating the generalized linear model with a binomial distribution. 
+
+```{r}
+# Transform the data
+data$Weight<-log10(data$Weight)
+data$GI<-log10(data$GI)
+# Modelling + selection
+gg<-glm(sign~Weight+CA+PA+Rings+HBD+HBA+GI,'binomial',data=data)
 summary(gg)
+selg<-step(gg,trace=T)
+print(summary(selg))
+```
+
+Let's plot two diagnostic plots
+
+```{r}
+logit<-function(z) {ll<-log(z/(1-z))}
+idx<-seq(1,dim(data)[1])
+# Pearson residuals
+res_per<-residuals(selg,"pearson")
+logfit<-logit(selg$fit)
+ll<-loess(res_per[sort.list(logfit)]~sort(logfit))
+res_sel<-abs(res_per)>5
+p1<-ggplot() + geom_point(aes(x=logfit,y=res_per)) +  geom_line(aes(x=ll$x, y = ll$fit, color=2),show.legend=F)+xlab("Linear predictor")+ ylab("Pearson residuals") + geom_text(aes(x=logfit[res_sel], y=res_per[res_sel], label=idx[res_sel]),show.legend=F,nudge_x=2)
+# Cooks distance
+library(stats)
+dd<-cooks.distance(selg)
+dd_sel<-dd>0.14
+p2<-ggplot() + geom_col(aes(x=idx, y=dd))+xlab("Index")+ylab("Cook's distance") +  geom_text(aes(x=idx[dd_sel],y=dd[dd_sel],label=idx[dd_sel]),show.legend=F,nudge_y=0.01)
+library(grid)
+library(gridExtra)
+grid.arrange(p1,p2,ncol=1)
+```
+
+This identifies data point 355 as a really large outlier, although data point 198 has a really large residual, and data point 264 also has a rather large Cook's distance.  
+
+Let's try to drop the data points 198, 264 and 355 to start with and redo the fit and model selection.
+
+```{r}
+data2<-data
+data2<-data[-c(198,264,355),]
+gg<-glm(sign~Weight+CA+PA+Rings+HBD+HBA+GI,'binomial',data=data2)
 selg<-step(gg,trace=F)
 print(summary(selg))
-par(mfrow=c(2,2))
-plot(selg)
 ```
+
+And then redo the diagnostics plot
+
+```{r}
+logit<-function(z) {ll<-log(z/(1-z))}
+idx<-seq(1,dim(data2)[1])
+# Pearson residuals
+res_per<-residuals(selg,"pearson")
+logfit<-logit(selg$fit)
+ll<-loess(res_per[sort.list(logfit)]~sort(logfit))
+res_sel<-abs(res_per)>5
+p1<-ggplot() + geom_point(aes(x=logfit,y=res_per)) +  geom_line(aes(x=ll$x, y = ll$fit, color=2),show.legend=F)+xlab("Linear predictor")+ ylab("Pearson residuals") + geom_text(aes(x=logfit[res_sel], y=res_per[res_sel], label=idx[res_sel]),show.legend=F,nudge_x=2)
+# Cooks distance
+library(stats)
+dd<-cooks.distance(selg)
+dd_sel<-dd>0.14
+p2<-ggplot() + geom_col(aes(x=idx, y=dd))+xlab("Index")+ylab("Cook's distance") +  geom_text(aes(x=idx[dd_sel],y=dd[dd_sel],label=idx[dd_sel]),show.legend=F,nudge_y=0.01)
+library(grid)
+library(gridExtra)
+grid.arrange(p1,p2,ncol=1)
+```
+
+Still three outliers identified on the Cook's distance, but the residuals are ok, so we will continue.
 
 Plot a dose response
 
 ```{r}
 logit<-function(z) {ll<-log(z/(1-z))}
-plot(logit(selg$fit),data$sign,xlab="linear predictor",ylab="sign")
+plot(logit(selg$fit),data2$sign,xlab="linear predictor",ylab="sign")
 lines(sort(logit(selg$fit)),selg$fit[sort.list(selg$fit)])
 ```
 
-And check its classification
+Finally, check its classification
 
 ```{r}
 pp<-predict(selg,type="response")
 pp[pp<.5]<-0
 pp[pp>=.5]<-1
-table(pp,data$sign)
-print(c("Misclassification error=", round(sum(pp!=data$sign)/length(data$sign),3)))
+table(pp,data2$sign)
+print(c("Misclassification error=", round(sum(pp!=data2$sign)/length(data2$sign),3)))
 ```
+
+Now we are finished with the first step of the model, so now we will continue with making the two OLS models.
 
 Plot the data anew but separate positive and negative values
 
 ```{r}
-data_pos<-data[data$dGow>0,]
-data_pos$Weight<-log10(data_pos$Weight)
-data_pos[data_pos$Heavies>15,]$Heavies<-15
-data_pos[data_pos$Polar>8,]$Polar<-8
-p1<-ggplot(data=data_pos, aes(x=Weight, y=dGow)) + geom_point() 
-p2<-ggplot(data=data_pos, aes(x=Heavies, y=dGow)) + geom_point()
-p3<-ggplot(data=data_pos, aes(x=Carbons, y=dGow)) + geom_point() 
-p4<-ggplot(data=data_pos, aes(x=Polar, y=dGow)) + geom_point() 
-p5<-ggplot(data=data_pos, aes(x=Rings, y=dGow)) + geom_point()
-p6<-ggplot(data=data_pos, aes(x=HDonors, y=dGow)) + geom_point() 
-p7<-ggplot(data=data_pos, aes(x=HAcceptors, y=dGow)) + geom_point() 
+data_pos<-data[data$Partition>0,]
+# Scatter plots
+data_pos[data_pos$HA>15,]$HA<-15
+data_pos[data_pos$PA>8,]$PA<-8
+p1<-ggplot(data=data_pos, aes(x=Weight, y=Partition)) + geom_point() 
+p2<-ggplot(data=data_pos, aes(x=HA, y=Partition)) + geom_point()
+p3<-ggplot(data=data_pos, aes(x=CA, y=Partition)) + geom_point() 
+p4<-ggplot(data=data_pos, aes(x=PA, y=Partition)) + geom_point() 
+p5<-ggplot(data=data_pos, aes(x=Rings, y=Partition)) + geom_point()
+p6<-ggplot(data=data_pos, aes(x=HBD, y=Partition)) + geom_point() 
+p7<-ggplot(data=data_pos, aes(x=HBA, y=Partition)) + geom_point() 
+p8<-ggplot(data=data_pos, aes(x=GI, y=Partition)) + geom_point() 
 library(grid)
 library(gridExtra)
-grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
+
+# Colinearity
+library(ggplot2)
+library(reshape2)
+cormat_pos<-melt(cor(data_pos[,seq(5,dim(data)[2]-1)]))
+
+ii<-which(cormat_pos[,"value"]==1)
+maxv_pos<-max(cormat_pos[-ii,"value"])
+maxi_pos<-which(cormat_pos["value"]==maxv_pos)[1]
+
+ggplot(data = cormat_pos, aes(x=Var1, y=Var2, fill=value)) + scale_fill_gradient2(low="green", high="red", mid="white", midpoint=0, limit=c(-1,1), space="Lab", name="Pearson\nCorrelation") + xlab("") + ylab("")+ geom_tile() + theme_minimal() +  theme(axis.text.x=element_text(angle=45, vjust=1, size=10, hjust=1), axis.text.y = element_text(size=10))
 ```
 
-and negative data
+The maxium R value is `r round(cormat_pos[maxi_pos,"value"],2)` for variables "`r cormat_pos[maxi_pos,"Var1"]`"" and "`r cormat_pos[maxi_pos,"Var2"]`".
+
+and then the negative data
 
 ```{r}
-data_neg<-data[data$dGow<0,]
-data_neg$Weight<-log10(data_neg$Weight)
-p1<-ggplot(data=data_neg, aes(x=Weight, y=dGow)) + geom_point() 
-p2<-ggplot(data=data_neg, aes(x=Heavies, y=dGow)) + geom_point()
-p3<-ggplot(data=data_neg, aes(x=Carbons, y=dGow)) + geom_point() 
-p4<-ggplot(data=data_neg, aes(x=Polar, y=dGow)) + geom_point() 
-p5<-ggplot(data=data_neg, aes(x=Rings, y=dGow)) + geom_point()
-p6<-ggplot(data=data_neg, aes(x=HDonors, y=dGow)) + geom_point() 
-p7<-ggplot(data=data_neg, aes(x=HAcceptors, y=dGow)) + geom_point() 
+data_neg<-data[data$Partition<0,]
+# Scatter plots
+p1<-ggplot(data=data_neg, aes(x=Weight, y=Partition)) + geom_point() 
+p2<-ggplot(data=data_neg, aes(x=HA, y=Partition)) + geom_point()
+p3<-ggplot(data=data_neg, aes(x=CA, y=Partition)) + geom_point() 
+p4<-ggplot(data=data_neg, aes(x=PA, y=Partition)) + geom_point() 
+p5<-ggplot(data=data_neg, aes(x=Rings, y=Partition)) + geom_point()
+p6<-ggplot(data=data_neg, aes(x=HBD, y=Partition)) + geom_point() 
+p7<-ggplot(data=data_neg, aes(x=HBA, y=Partition)) + geom_point() 
+p8<-ggplot(data=data_neg, aes(x=GI, y=Partition)) + geom_point() 
 library(grid)
 library(gridExtra)
-grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol=3)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=3)
+
+# Correlations
+library(ggplot2)
+library(reshape2)
+
+cormat_neg<-melt(cor(data_neg[,seq(5,dim(data)[2]-1)]))
+ii<-which(cormat_neg[,"value"]==1)
+maxv_neg<-max(cormat_neg[-ii,"value"])
+maxi_neg<-which(cormat_neg["value"]==maxv_neg)[1]
+
+ggplot(data = cormat_neg, aes(x=Var1, y=Var2, fill=value)) + scale_fill_gradient2(low="green", high="red", mid="white", midpoint=0, limit=c(-1,1), space="Lab", name="Pearson\nCorrelation") + xlab("") + ylab("")+ geom_tile() + theme_minimal() +  theme(axis.text.x=element_text(angle=45, vjust=1, size=10, hjust=1), axis.text.y = element_text(size=10))
+
 ```
+
+
+```{r}
+print(cormat_neg[cormat_neg["value"]>0.90,])
+```
+
+The maxium R value is `r round(cormat_neg[maxi_neg,"value"],2)` for variables "`r cormat_neg[maxi_neg,"Var1"]`"" and "`r cormat_neg[maxi_neg,"Var2"]`".
 
 Create an OLS model for the positive molecules
 
 ```{r}
-mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data_pos)
+mm<-lm(Partition~Weight+HA+CA+PA+Rings+HBD+HBA+GI,data=data_pos)
 summary(mm)
-par(mfrow=c(2,2))
-plot(mm)
+mm_pos<-step(mm,trace=F)
+summary(mm_pos)
+library(ggfortify)
+autoplot(mm, which=c(1,2,4))
 ```
 
-And then on the negative onese
+Above, I did model selection based on backward search. But we can also try an exhaustive search followed by model selection by AIC.
 
 ```{r}
-mm<-lm(dGow~Weight+Heavies+Carbons+Polar+Rings+HDonors+HAcceptors,data=data_neg)
-summary(mm)
-par(mfrow=c(2,2))
-plot(mm)
+library(leaps)
+xx<-as.data.frame(data_pos)[,c("Weight","HA","CA","PA","Rings","HBD","HBA","GI")]
+yy<-as.data.frame(data_pos)[,"Partition"]
+# Enumerate all models
+rleaps<-regsubsets(xx,yy,int=T,nbest=1000,nvmax=dim(xx)[2]+1,really.big=T,method=c("ex")) 
+cleaps<-summary(rleaps,matrix=T) 
+# True/False matrix. The r-th is a True/False statement about which
+Models<-cleaps$which
+# Add a model with only the intercept
+Models<-rbind(c(T,rep(F,dim(xx)[2])),Models) 
+# Calculate AIC
+nullrss<-sum((yy-mean(yy))^2)
+RSS<-cleaps$rss
+RSS<-c(nullrss,RSS)
+modsize<-apply(Models==T,1,sum)
+AIC<-length(yy)*log(RSS)+2*modsize
 ```
+
+Plot the AIC value against the model size and print out the model selected with 6, 7, 8 or 9 variables.
+
+```{r}
+qplot(modsize, AIC, xlab="Model size", ylab="AIC")+scale_x_discrete(limits=c("1","2","3","4","5","6","7","8","9","10"))
+print(rbind(Models[AIC==min(AIC[modsize==6]),],Models[AIC==min(AIC[modsize==7]),],Models[AIC==min(AIC[modsize==8]),],Models[AIC==min(AIC[modsize==9]),]))
+```
+
+Now we have model for molecules with positive data, let's make one for molecules with negative data:
+
+```{r}
+mm<-lm(Partition~Weight+CA+PA+Rings+HBD+HBA,data=data_neg)
+summary(mm)
+mm_neg<-step(mm,trace=T)
+summary(mm_neg)
+library(ggfortify)
+autoplot(mm, which=c(1,2,4))
+```
+
+Let's try to select a model based on an exhaustive search and the AIC criterion
+
+```{r}
+library(leaps)
+xx<-as.data.frame(data_neg)[,c("Weight","CA","PA","Rings","HBD","HBA")]
+yy<-as.data.frame(data_neg)[,"Partition"]
+# Enumerate all models
+rleaps<-regsubsets(xx,yy,int=T,nbest=1000,nvmax=dim(xx)[2]+1,really.big=T,method=c("ex")) 
+cleaps<-summary(rleaps,matrix=T) 
+# True/False matrix. The r-th is a True/False statement about which
+Models<-cleaps$which
+# Add a model with only the intercept
+Models<-rbind(c(T,rep(F,dim(xx)[2])),Models) 
+# Calculate AIC
+nullrss<-sum((yy-mean(yy))^2)
+RSS<-cleaps$rss
+RSS<-c(nullrss,RSS)
+modsize<-apply(Models==T,1,sum)
+AIC_neg<-length(yy)*log(RSS)+2*modsize
+```
+
+Plot the AIC value against the model size and print out the model selected with 6 or 7 variables.
+
+```{r}
+qplot(modsize, AIC_neg, xlab="Model size", ylab="AIC")+scale_x_discrete(limits=c("1","2","3","4","5","6","7","8","9","10"))
+print(rbind(Models[AIC_neg==min(AIC_neg[modsize==6]),],Models[AIC_neg==min(AIC_neg[modsize==7]),]))
+```
+
+Now we have our two-step model! 
 
 Lets try prediction on Minnesota data
 
 ```{r}
-sota<-read_excel("../phys/minnesota.xlsx")
-sota$sign<-as.integer(sota$dGow>0)
-pp2<-predict(selg, sota[c("Weight","Carbons","Polar","HDonors","HAcceptors")], type="response")
+sota<-read_excel("../testing.xlsx")
+sota$sign<-as.integer(sota$Partition>0)
+sota$Weight<-log10(sota$Weight)
+sota$GI<-log10(sota$GI)
+# First step
+pp2<-predict(selg, sota[c("Weight","PA","Rings","HBD","HBA","GI")], type="response")
 pp2[pp2<.5]<-0
 pp2[pp2>=.5]<-1
 table(pp2,sota$sign)
 print(c("Misclassification error=", round(sum(pp2!=sota$sign)/length(sota$sign),3)))
+```
+
+Now apply the OLS models
+
+```{r}
+# Positive molecules
+sota_pos<-sota[pp2==1,]
+f_pos<-sota_pos[c("Partition")]
+f_pos$pred<-predict(mm_pos, sota_pos[c("Weight","CA","Rings","HBD","HBA","GI")])
+f_pos$model="Positive"
+
+# Negative molecules
+sota_neg<-sota[pp2==0,]
+f_neg<-sota_neg[c("Partition")]
+f_neg$pred<-predict(mm_neg, sota_neg[c("Weight","CA","PA","Rings","HBD","HBA")])
+f_neg$model="Negative"
+
+f<-rbind(f_pos,f_neg)
+```
+
+Some simple statistics of the molecules with positive coefficients is MAD=`r round(mean(abs(f_pos$Partition-f_pos$pred)),2)` kcal/mol and $R$=`r round(cor(f_pos$Partition,f_pos$pred),2)`.
+
+Some simple statistics of the molecules with negative coefficients is MAD=`r round(mean(abs(f_neg$Partition-f_neg$pred)),2)` kcal/mol and $R$=`r round(cor(f_neg$Partition,f_neg$pred),4)`.
+
+Some simple statistics of all molecules is MAD=`r round(mean(abs(f$Partition-f$pred)),2)` kcal/mol and $R$=`r round(cor(f$Partition,f$pred),2)`.
+
+And finally some plotting
+
+```{r}
+library(ggplot2)
+ggplot(f, aes(x=Partition, y=pred, color=model)) + geom_point() + xlab("Experimental [kcal/mol]") + ylab("Predicted [kcal/mol]") + xlim(-5,8) + ylim(-5,8) + theme(aspect.ratio=1)
 ```
 
