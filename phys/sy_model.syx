@@ -1,0 +1,311 @@
+<?xml version='1.0' encoding='ASCII'?>
+<flow xmlns="http://www.sysess.org/sympathyfordata/workflow/1.0" cls="Flow" height="50.0" id="" is_locked="False" uuid="{c32904b8-b17c-40f8-a6c3-9c3675189c86}" width="50.0" x="0.0" y="0.0">
+  <label>sy_model.syx</label>
+  <description></description>
+  <author>Unknown</author>
+  <copyright></copyright>
+  <version>1.0</version>
+  <min_version></min_version>
+  <icon/>
+  <aggregation type="json">{}</aggregation>
+  <libraries type="json">[]</libraries>
+  <pythonpaths type="json">[]</pythonpaths>
+  <overrides type="json">{}</overrides>
+  <environment type="json">{}</environment>
+  <parameters type="json">{"environment": {}}</parameters>
+  <ports/>
+  <flow cls="Flow" height="50.0" id="" source_uuid="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" uuid="{4c9f41c7-0bd8-49ef-b2bb-8d08403af27b}" width="50.0" x="2000.0" y="2100.0" href="select_xy.syx">
+    <label></label>
+    <overrides type="json">{}</overrides>
+    <environment type="json">{}</environment>
+    <ports>
+      <input index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{f87098ba-65fe-438c-8fdb-088fe2ebd1be}" type="table" uuid="{1590b15d-e797-4d4d-9a20-ae8a959ec6cc}" x="1975.0" y="2175.0">
+        <label>Port</label>
+        <description>Port</description>
+      </input>
+      <output index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{d5e76ce2-862d-48ea-8ea9-aa9236bf4880}" type="table" uuid="{767c27f2-425e-4dda-afd0-07c9ad22c003}" x="2300.0" y="2175.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+      <output index="1" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{c7cf58ee-dfd3-4e4e-b195-d74bfceeb237}" type="table" uuid="{b98eb475-887d-4549-a7f5-3bb0d1989ae9}" x="2300.0" y="2075.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+    </ports>
+  </flow>
+  <flow cls="Flow" height="50.0" id="" source_uuid="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" uuid="{60f20b65-2cae-4e06-891f-de3c6ae3fa50}" width="50.0" x="2225.0" y="2200.0" href="select_xy.syx">
+    <label></label>
+    <overrides type="json">{}</overrides>
+    <environment type="json">{}</environment>
+    <ports>
+      <input index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{f87098ba-65fe-438c-8fdb-088fe2ebd1be}" type="table" uuid="{72a169e1-c4d5-487f-850c-eeb19eadb388}" x="1975.0" y="2175.0">
+        <label>Port</label>
+        <description>Port</description>
+      </input>
+      <output index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{d5e76ce2-862d-48ea-8ea9-aa9236bf4880}" type="table" uuid="{a5abf757-0995-4dd3-8c7f-93823ea44d44}" x="2300.0" y="2175.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+      <output index="1" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{c7cf58ee-dfd3-4e4e-b195-d74bfceeb237}" type="table" uuid="{b2bc7ba5-3d23-4b0b-af1d-86f30523956a}" x="2300.0" y="2075.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+    </ports>
+  </flow>
+  <flow cls="Flow" height="50.0" id="" source_uuid="{35ff6c67-42bf-4618-97bc-ba0b189f0e79}" uuid="{70f6d3eb-9f2e-4a38-aade-09e13a7679c1}" width="50.0" x="2125.0" y="2200.0" href="read_data.syx">
+    <label>Read test set</label>
+    <overrides type="json">{"{1ac984c8-f633-4457-bb66-1f49c2f07fbb}": {"db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "value": "mssql+pyodbc:///", "label": "SQLAlchemy engine URL", "editor": null, "type": "string", "order": 1}, "db_password": {"description": "A valid password for the selected user.", "value": "", "label": "Password", "editor": null, "type": "string", "order": 7}, "db_method": {"description": "Select which Database connection method that you want to use.", "value": "ODBC", "label": "Database connection method", "editor": {"edit": false, "include_empty": false, "type": "combobox", "display": null, "options": ["ODBC", "SQLAlchemy"]}, "type": "string", "order": 2}, "db_driver": {"description": "Database driver to use.", "passthrough": false, "list": ["SQL Server"], "value": [0], "label": "Database driver", "editor": {"edit": false, "include_empty": false, "type": "combobox", "display": null, "options": []}, "value_names": ["SQL Server"], "type": "list", "order": 3, "mode": "selected"}, "filename": {"description": "A filename including path if needed", "value": "..\\testing.xlsx", "label": "Filename", "editor": {"states": null, "filter": ["Any files (*)"], "type": "filename"}, "type": "string", "order": 0}, "db_user": {"description": "A valid database user.", "value": "", "label": "User", "editor": null, "type": "string", "order": 6}, "db_databasename": {"description": "The name of the database.", "value": "", "label": "Database name", "editor": null, "type": "string", "order": 5}, "db_servername": {"description": "A valid name to a database server.", "value": "", "label": "Server name", "editor": null, "type": "string", "order": 4}, "db_connection_string": {"description": "A connection string that will override other settings.", "value": "", "label": "Connection string", "editor": null, "type": "string", "order": 8}, "type": "group", "datasource_type": {"description": "Type of datasource.", "passthrough": false, "list": ["File", "Database"], "value": [0], "label": "Datasource type", "editor": null, "value_names": ["File"], "type": "list", "order": 9, "mode": "selected"}}}</overrides>
+    <environment type="json">{}</environment>
+    <ports>
+      <output index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{8727a1a4-5250-4735-b0e7-6e236e252c1f}" type="table" uuid="{298d1913-6ef2-4917-8f88-442ef3bfd7c1}" x="2200.0" y="2200.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+    </ports>
+  </flow>
+  <flow cls="Flow" height="50.0" id="" source_uuid="{35ff6c67-42bf-4618-97bc-ba0b189f0e79}" uuid="{7aaee436-4656-409d-8336-dccb92f4e5f1}" width="50.0" x="1900.0" y="2100.0" href="read_data.syx">
+    <label>Read training data</label>
+    <overrides type="json">{"{1ac984c8-f633-4457-bb66-1f49c2f07fbb}": {"db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "value": "mssql+pyodbc:///", "label": "SQLAlchemy engine URL", "editor": null, "type": "string", "order": 1}, "db_password": {"description": "A valid password for the selected user.", "value": "", "label": "Password", "editor": null, "type": "string", "order": 7}, "db_method": {"description": "Select which Database connection method that you want to use.", "value": "ODBC", "label": "Database connection method", "editor": {"edit": false, "include_empty": false, "type": "combobox", "display": null, "options": ["ODBC", "SQLAlchemy"]}, "type": "string", "order": 2}, "db_driver": {"description": "Database driver to use.", "passthrough": false, "list": ["SQL Server"], "value": [0], "label": "Database driver", "editor": {"edit": false, "include_empty": false, "type": "combobox", "display": null, "options": []}, "value_names": ["SQL Server"], "type": "list", "order": 3, "mode": "selected"}, "filename": {"description": "A filename including path if needed", "value": "..\\training_filtered.xlsx", "label": "Filename", "editor": {"states": null, "filter": ["Any files (*)"], "type": "filename"}, "type": "string", "order": 0}, "db_user": {"description": "A valid database user.", "value": "", "label": "User", "editor": null, "type": "string", "order": 6}, "db_databasename": {"description": "The name of the database.", "value": "", "label": "Database name", "editor": null, "type": "string", "order": 5}, "db_servername": {"description": "A valid name to a database server.", "value": "", "label": "Server name", "editor": null, "type": "string", "order": 4}, "db_connection_string": {"description": "A connection string that will override other settings.", "value": "", "label": "Connection string", "editor": null, "type": "string", "order": 8}, "type": "group", "datasource_type": {"description": "Type of datasource.", "passthrough": false, "list": ["File", "Database"], "value": [0], "label": "Datasource type", "editor": null, "value_names": ["File"], "type": "list", "order": 9, "mode": "selected"}}}</overrides>
+    <environment type="json">{}</environment>
+    <ports>
+      <output index="0" key="Port" optional="False" parent="True" scheme="hdf5" source_uuid="{8727a1a4-5250-4735-b0e7-6e236e252c1f}" type="table" uuid="{99f963e1-4f87-4d88-9cb4-7a01b3fac886}" x="2200.0" y="2200.0">
+        <label>Port</label>
+        <description>Port</description>
+      </output>
+    </ports>
+  </flow>
+  <node id="org.sysess.sympathy.visualize.figuretabletreegui" uuid="{2776bcba-a146-405e-b007-70ba07aa82dc}" x="2700.0" y="2200.0">
+    <label>Nice plot</label>
+    <description>Create a Figure from a Table using a GUI.</description>
+    <author>Benedikt Ziegler &lt;benedikt.ziegler@combine.se</author>
+    <copyright>(c) 2016 System Engineering Software Society</copyright>
+    <version>0.2</version>
+    <parameters type="json">{"type": "group", "parameters": {"description": "Configuration window", "editor": null, "label": "GUI", "order": 0, "type": "string", "value": "[[\"axes.axes-2.aspect\", \"equal\"], [\"axes.axes-2.xaxis_position\", \"bottom\"], [\"axes.axes-2.xlabel\", \"Experiment\"], [\"axes.axes-2.xlim\", \"(-4, 8)\"], [\"axes.axes-2.yaxis_position\", \"left\"], [\"axes.axes-2.ylabel\", \"Modell\"], [\"axes.axes-2.ylim\", \"(-4, 8)\"], [\"line.line-2.axes\", \"axes-2\"], [\"line.line-2.xdata\", \"np.asarray([-4,8])\"], [\"line.line-2.ydata\", \"np.asarray([-4,8])\"], [\"line.line-2.color\", \"#000000\"], [\"line.line-2.linestyle\", \"dashed\"], [\"scatter.scatter-2.axes\", \"axes-2\"], [\"scatter.scatter-2.xdata\", \"table.col('Partition').data\"], [\"scatter.scatter-2.ydata\", \"table.col('Prediction').data\"]]"}}</parameters>
+    <ports>
+      <input key="input" scheme="hdf5" type="table" type_base="table" uuid="{b8214867-5ab1-4475-b313-558a7c4856ec}">
+        <label>Input data</label>
+        <description>Input data</description>
+      </input>
+      <output key="figure" scheme="text" type="figure" type_base="figure" uuid="{646e5b59-2cc5-4c06-84ed-db97e2454a21}">
+        <label>Output figure</label>
+        <description>Output figure</description>
+      </output>
+      <output key="config" scheme="hdf5" type="table" type_base="table" uuid="{a00d92c5-5121-46ce-babc-6f38f9be0852}">
+        <label>Configuration</label>
+        <description>Configuration</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.machinelearning.linearregression" uuid="{4b680d00-10b4-4b4f-a9c0-feb324af5bdb}" x="2025.0" y="2000.0">
+    <label>Linear Regression</label>
+    <description>Ordinary linear regression</description>
+    <author>Mathias Broxvall</author>
+    <copyright>(C) 2017 System Engineering Software Society</copyright>
+    <version>0.1</version>
+    <parameters type="json">{"type": "group", "normalize": {"description": "This parameter is ignored when ``fit_intercept`` is set to False.\nIf True, the regressors X will be normalized before regression by\nsubtracting the mean and dividing by the l2-norm.\nIf you wish to standardize, please use\n:class:`sklearn.preprocessing.StandardScaler` before calling ``fit`` on\nan estimator with ``normalize=False``.\n", "editor": null, "label": "normalize", "order": 0, "type": "string", "value": "False"}, "n_jobs": {"description": "The number of jobs to use for the computation.\nIf -1 all CPUs are used. This will only provide speedup for\nn_targets &gt; 1 and sufficient large problems.\n", "editor": null, "label": "n_jobs", "order": 1, "type": "string", "value": "1"}, "fit_intercept": {"description": "whether to calculate the intercept for this model. If set\nto False, no intercept will be used in calculations\n(e.g. data is expected to be already centered).\n", "editor": null, "label": "fit_intercept", "order": 2, "type": "string", "value": "True"}}</parameters>
+    <ports>
+      <output key="model" scheme="hdf5" type="model" type_base="model" uuid="{7ccac101-aef7-47ac-95b9-a99d4d3fbea8}">
+        <label>Model</label>
+        <description>Model</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.list.itemtolist" uuid="{9e77524f-f817-4366-a5e7-af0f4732b7f2}" x="2800.0" y="2175.0">
+    <label>Item to List</label>
+    <description></description>
+    <author>Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+    <copyright>(C) 2015 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "n": {"description": "Choose number of times to repeat items.", "editor": null, "label": "Repeat number of times", "order": 0, "type": "integer", "value": 1}}</parameters>
+    <ports>
+      <input key="item" scheme="text" type="figure" type_base="&lt;a&gt;" uuid="{bb6f438f-008e-4628-9a21-0f05f75bcc08}">
+        <label>Input Item</label>
+        <description>Input Item</description>
+      </input>
+      <output key="list" scheme="hdf5" type="[figure]" type_base="[&lt;a&gt;]" uuid="{2a87e08e-7dc1-455b-939c-f444b5f938b1}">
+        <label>Item as List</label>
+        <description>Item as List</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.export.exportfigures" uuid="{c9d8f993-fadf-48a5-9631-664db511b87a}" x="2900.0" y="2175.0">
+    <label>Export Figures</label>
+    <description>Export Figures to image files.</description>
+    <author>Benedikt Ziegler &lt;benedikt.ziegler@combine.se&gt;</author>
+    <copyright>(c) 2016 System Engineering Software Society</copyright>
+    <version>0.2</version>
+    <parameters type="json">{"type": "group", "active_exporter": {"description": "Select data format exporter. Each data format has its own exporter with its own special configuration, see exporter information. The selection of exporter do also suggest filename extension", "editor": null, "label": "Exporter", "order": 0, "type": "string", "value": "Image"}, "custom_exporter_data": {"label": "", "order": 1, "type": "group", "Image": {"label": "", "type": "group", "dpi": {"description": "The dots-per-inch of the figure.", "label": "Dots-per-inch", "type": "integer", "value": 120, "editor": {"max": 100000, "min": 1, "step": 1, "type": "spinbox"}}, "extension": {"description": "The extension to be used for exporting the figures.", "label": "Filename extension:", "mode": "selected", "passthrough": false, "type": "list", "list": ["eps", "pdf", "png", "ps", "svg", "svgz"], "value": [2], "value_names": ["png"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "height": {"description": "The image height in pixels.", "label": "Image height (px):", "type": "integer", "value": 600, "editor": {"max": 1000000000, "min": 100, "step": 1, "type": "spinbox"}}, "paper_orientation": {"description": "The paper orientation (portrait or landscape).", "label": "Orientation:", "mode": "selected", "passthrough": false, "type": "list", "list": ["portrait", "landscape"], "value": [0], "value_names": ["portrait"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "paper_size": {"description": "The paper size in millimeter.", "label": "Paper size:", "mode": "selected", "passthrough": false, "type": "list", "list": ["Custom ", "A4 (210mm x 297mm)", "A5 (148mm x 210mm)", "A6 (105mm x 148mm)", "Letter (215.9mm x 279.4mm)", "Legal (215.9mm x 355.6mm)", "Ledger (279.4mm x 431.8mm)", "B4 (250mm x 353mm)", "B5 (176mm x 250mm)", "B6 (125mm x 176mm)"], "value": [0], "value_names": ["Custom "], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "selected_strategy": {"description": "Choose who to set the size of the saved image(s).", "label": "Image size strategy", "mode": "selected", "passthrough": false, "type": "list", "list": ["Set Pixels", "Set Page Size"], "value": [0], "value_names": ["Set Pixels"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "size_height": {"description": "The image height in millimeter.", "label": "Image height (mm):", "type": "float", "value": 210.0, "editor": {"decimals": 3, "max": 1000000000, "min": 0.0, "step": 1, "type": "spinbox"}}, "size_width": {"description": "The image width in millimeter.", "label": "Image width (mm):", "type": "float", "value": 297.0, "editor": {"decimals": 3, "max": 1000000000, "min": 0.0, "step": 1, "type": "spinbox"}}, "width": {"description": "The image width in pixels.", "label": "Image width (px):", "type": "integer", "value": 800, "editor": {"max": 1000000000, "min": 100, "step": 1, "type": "spinbox"}}}}, "directory": {"description": "Select the directory where to export the files.", "label": "Output directory", "order": 2, "type": "string", "value": ".", "editor": {"states": null, "type": "dirname"}}, "filename": {"description": "Specify the common base for the filenames. If there are several incoming Figures the node will add \u201c_${index number of corresponding Figure in the incoming list}\u201d after the base for each file. Do not specify extension", "editor": null, "label": "Filename", "order": 3, "type": "string", "value": "sy_model"}}</parameters>
+    <ports>
+      <input key="figures" scheme="hdf5" type="[figure]" type_base="[figure]" uuid="{a3176653-5e14-4461-8b6f-65ccf8a3b59f}">
+        <label>Input figures</label>
+        <description>Input figures</description>
+      </input>
+      <output key="port0" scheme="text" type="[datasource]" type_base="[datasource]" uuid="{2f67229c-15df-410d-8aa4-087162dceb56}">
+        <label>Datasources with paths to the created files</label>
+        <description>Datasources with paths to the created files</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.renamesingletablecolumns" uuid="{d1870f0a-f305-41c6-a9e3-3f014736f2e6}" x="2425.0" y="2075.0">
+    <label>Rename to Prediction</label>
+    <description>Rename the Table columns by using regular expressions.</description>
+    <author>Greger Cronquist &lt;greger.cronquist@sysess.org&gt;</author>
+    <copyright>(c) 2013 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "src_expr": {"description": "Specify the regular expression which will be replaced", "editor": null, "label": "Search expression", "order": 0, "type": "string", "value": "Partition"}, "dst_expr": {"description": "Specify the regular expression for replacement", "editor": null, "label": "Replacement expression", "order": 1, "type": "string", "value": "Prediction"}}</parameters>
+    <ports>
+      <input key="Input" scheme="hdf5" type="table" type_base="table" uuid="{48f0f4fa-70ac-4a29-acd2-7332a4402674}">
+        <label>Input</label>
+        <description>Input</description>
+      </input>
+      <output key="Output" scheme="hdf5" type="table" type_base="table" uuid="{0805ab99-812b-4307-8c2f-6e68cfc1db65}">
+        <label>Output</label>
+        <description>Output</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.machinelearning.predict" uuid="{d64cd360-1a90-4cb6-9778-ea17ef5bd3a0}" x="2325.0" y="2075.0">
+    <label>Predict</label>
+    <description>Uses a model to predict Y given X</description>
+    <author>Mathias Broxvall</author>
+    <copyright>(C) 2017 System Engineering Software Society</copyright>
+    <version>0.1</version>
+    <parameters type="json">{"type": "group"}</parameters>
+    <ports>
+      <input key="in-model" scheme="hdf5" type="model" type_base="model" uuid="{507afea5-b9e1-4302-b253-4add190ca953}">
+        <label>Input model</label>
+        <description>Input model</description>
+      </input>
+      <input key="X" scheme="hdf5" type="table" type_base="table" uuid="{29d426bd-66e3-4d22-8021-aba686875302}">
+        <label>X</label>
+        <description>X</description>
+      </input>
+      <output key="Y" scheme="hdf5" type="table" type_base="table" uuid="{fd3a411c-cfe4-40b5-a8a2-7434631a9ae1}">
+        <label>Y</label>
+        <description>Y</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.calculatorgeneric" uuid="{e4254db7-e009-4c7a-a7f5-0a6860ebdcb5}" x="2700.0" y="2100.0">
+    <label>Simple statics</label>
+    <description>Performs user-defined python calculations</description>
+    <author>Greger Cronquist &lt;greger.cronquist@sysess.org&gt;, Magnus Sand&#233;n &lt;magnus.sanden@combine.se&gt;, Sara Gustafzelius &lt;sara.gustafzelius@combine.se&gt;, Benedikt Ziegler &lt;benedikt.ziegler@combine.se&gt;</author>
+    <copyright>(c) 2016 System Engineering Software Society</copyright>
+    <version>3.0</version>
+    <parameters type="json">{"type": "group", "calc_list": {"description": "List of calculations.", "editor": null, "label": "List of calculations", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["MAD = np.mean(np.abs(arg['Partition']-arg['Prediction'])) #ENABLED:1", "R = np.corrcoef(arg['Partition'],arg['Prediction'])[0,1] #ENABLED:1"], "value": [], "value_names": []}, "copy_input": {"description": "If enabled the incoming data will be copied to the output before running the calculations. This requires that the results will all have the same length. An exception will be raised if the lengths of the outgoing results differ.", "editor": null, "label": "Copy input", "order": 1, "type": "boolean", "value": false}, "fail_strategy": {"description": "Decide how a failed calculation should be handled", "label": "Action on calculation failure", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Exception", "Skip calculation"], "value": [0], "value_names": ["Exception"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="port0" scheme="hdf5" type="table" type_base="&lt;a&gt;" uuid="{c1624af9-5879-4d98-b46f-faf8c2d01a2d}">
+        <label>Generic Input</label>
+        <description>Generic Input</description>
+      </input>
+      <output key="port1" scheme="hdf5" type="table" type_base="table" uuid="{e969aa04-a564-4891-bc8d-04b8d8694feb}">
+        <label>Table with results from the calculations.</label>
+        <description>Table with results from the calculations.</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.hjointable" uuid="{f2b66d8b-2108-4873-be8f-6002772ed6f3}" x="2550.0" y="2150.0">
+    <label>Join Experiments and Predictions</label>
+    <description>Horizontal join of two Tables</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+    <copyright>(C) 2013 System Engineering Software Society</copyright>
+    <version>1.1</version>
+    <parameters type="json">{"type": "group", "rename": {"description": "If true columns with same name as an earlier column will be renamed and joined, otherwise columns will overwrite existing data", "editor": null, "label": "Rename duplicate columns", "order": 0, "type": "boolean", "value": true}, "mask": {"description": "Select if rows that are not represented in all Tables should be complemented with masked values", "editor": null, "label": "Complement missing rows", "order": 1, "type": "boolean", "value": true}, "name": {"description": "Select which port decides the output table(s) names", "label": "Input port name for joined table", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Lower", "Upper"], "value": [0], "value_names": ["Lower"], "editor": {"display": null, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="port1" scheme="hdf5" type="table" type_base="table" uuid="{e53f676d-5b01-4760-ae2a-3c7fe720310f}">
+        <label>Input Table 1</label>
+        <description>Input Table 1</description>
+      </input>
+      <input key="port2" scheme="hdf5" type="table" type_base="table" uuid="{a69e0ec4-8a85-4f16-8b21-b6a3174615ee}">
+        <label>Input Table 2</label>
+        <description>Input Table 2</description>
+      </input>
+      <output key="port1" scheme="hdf5" type="table" type_base="table" uuid="{7dfe6dff-1902-455e-b831-a8473f602fb0}">
+        <label>Table with horizontally joined data</label>
+        <description>Table with horizontally joined data</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.machinelearning.fit" uuid="{f84a1604-ad72-4e8a-93f6-0c82d84268d0}" x="2175.0" y="2075.0">
+    <label>Fit</label>
+    <description>Trains a model. Use "Create Input Port &gt; Y" for supervised training</description>
+    <author>Mathias Broxvall</author>
+    <copyright>(C) 2017 System Engineering Software Society</copyright>
+    <version>0.1</version>
+    <parameters type="json">{"type": "group"}</parameters>
+    <ports>
+      <input key="in-model" scheme="hdf5" type="model" type_base="model" uuid="{39880746-1ff9-4499-bf03-63d75c0de421}">
+        <label>Input model</label>
+        <description>Input model</description>
+      </input>
+      <input key="X" scheme="hdf5" type="table" type_base="table" uuid="{de0000a4-339d-41d2-a33e-1d38c615e4eb}">
+        <label>X</label>
+        <description>X</description>
+      </input>
+      <input key="Y0" scheme="hdf5" type="table" type_base="table" uuid="{330fd34d-9750-437c-9336-aceafccfe9af}">
+        <label>Y</label>
+        <description>Y</description>
+      </input>
+      <output key="out-model" scheme="hdf5" type="model" type_base="model" uuid="{e4d0006b-5b57-4720-94f6-611e97f6f93a}">
+        <label>Output model</label>
+        <description>Output model</description>
+      </output>
+    </ports>
+  </node>
+  <connection type="table" uuid="{17e9df11-7277-4e88-90ad-b5c92fb1292e}">
+    <source node="{4c9f41c7-0bd8-49ef-b2bb-8d08403af27b}" port="{b98eb475-887d-4549-a7f5-3bb0d1989ae9}"/>
+    <destination node="{f84a1604-ad72-4e8a-93f6-0c82d84268d0}" port="{330fd34d-9750-437c-9336-aceafccfe9af}"/>
+  </connection>
+  <connection type="table" uuid="{1e8d8307-1c61-4d58-9770-db8df73f6aeb}">
+    <source node="{60f20b65-2cae-4e06-891f-de3c6ae3fa50}" port="{b2bc7ba5-3d23-4b0b-af1d-86f30523956a}"/>
+    <destination node="{f2b66d8b-2108-4873-be8f-6002772ed6f3}" port="{a69e0ec4-8a85-4f16-8b21-b6a3174615ee}"/>
+  </connection>
+  <connection type="table" uuid="{2b4d368e-1fcd-436a-927c-16039bf1903e}">
+    <source node="{d1870f0a-f305-41c6-a9e3-3f014736f2e6}" port="{0805ab99-812b-4307-8c2f-6e68cfc1db65}"/>
+    <destination node="{f2b66d8b-2108-4873-be8f-6002772ed6f3}" port="{e53f676d-5b01-4760-ae2a-3c7fe720310f}"/>
+  </connection>
+  <connection type="table" uuid="{542fab81-e177-46f9-a839-31c5c755aefc}">
+    <source node="{70f6d3eb-9f2e-4a38-aade-09e13a7679c1}" port="{298d1913-6ef2-4917-8f88-442ef3bfd7c1}"/>
+    <destination node="{60f20b65-2cae-4e06-891f-de3c6ae3fa50}" port="{72a169e1-c4d5-487f-850c-eeb19eadb388}"/>
+  </connection>
+  <connection type="figure" uuid="{59c6cc02-8cc7-4701-afb2-671665a15d73}">
+    <source node="{2776bcba-a146-405e-b007-70ba07aa82dc}" port="{646e5b59-2cc5-4c06-84ed-db97e2454a21}"/>
+    <destination node="{9e77524f-f817-4366-a5e7-af0f4732b7f2}" port="{bb6f438f-008e-4628-9a21-0f05f75bcc08}"/>
+  </connection>
+  <connection type="table" uuid="{5d386a4b-8373-4dc3-91c4-0a21c76175cd}">
+    <source node="{f2b66d8b-2108-4873-be8f-6002772ed6f3}" port="{7dfe6dff-1902-455e-b831-a8473f602fb0}"/>
+    <destination node="{e4254db7-e009-4c7a-a7f5-0a6860ebdcb5}" port="{c1624af9-5879-4d98-b46f-faf8c2d01a2d}"/>
+  </connection>
+  <connection type="model" uuid="{7d03a903-3931-4cd9-8d44-8c95f430cb6a}">
+    <source node="{f84a1604-ad72-4e8a-93f6-0c82d84268d0}" port="{e4d0006b-5b57-4720-94f6-611e97f6f93a}"/>
+    <destination node="{d64cd360-1a90-4cb6-9778-ea17ef5bd3a0}" port="{507afea5-b9e1-4302-b253-4add190ca953}"/>
+  </connection>
+  <connection type="model" uuid="{7f70599c-5226-4513-aeb6-3037704492e3}">
+    <source node="{4b680d00-10b4-4b4f-a9c0-feb324af5bdb}" port="{7ccac101-aef7-47ac-95b9-a99d4d3fbea8}"/>
+    <destination node="{f84a1604-ad72-4e8a-93f6-0c82d84268d0}" port="{39880746-1ff9-4499-bf03-63d75c0de421}"/>
+  </connection>
+  <connection type="table" uuid="{9b3f13ba-63af-4182-8496-2931b51cb829}">
+    <source node="{4c9f41c7-0bd8-49ef-b2bb-8d08403af27b}" port="{767c27f2-425e-4dda-afd0-07c9ad22c003}"/>
+    <destination node="{f84a1604-ad72-4e8a-93f6-0c82d84268d0}" port="{de0000a4-339d-41d2-a33e-1d38c615e4eb}"/>
+  </connection>
+  <connection type="[figure]" uuid="{b10aed92-0682-442e-9b8c-3bb95a255f91}">
+    <source node="{9e77524f-f817-4366-a5e7-af0f4732b7f2}" port="{2a87e08e-7dc1-455b-939c-f444b5f938b1}"/>
+    <destination node="{c9d8f993-fadf-48a5-9631-664db511b87a}" port="{a3176653-5e14-4461-8b6f-65ccf8a3b59f}"/>
+  </connection>
+  <connection type="table" uuid="{c4ff02c6-3e33-4a2e-8aac-558e4b068f33}">
+    <source node="{60f20b65-2cae-4e06-891f-de3c6ae3fa50}" port="{a5abf757-0995-4dd3-8c7f-93823ea44d44}"/>
+    <destination node="{d64cd360-1a90-4cb6-9778-ea17ef5bd3a0}" port="{29d426bd-66e3-4d22-8021-aba686875302}"/>
+  </connection>
+  <connection type="table" uuid="{c5b87efa-e5fa-42a1-b331-8c1743392972}">
+    <source node="{d64cd360-1a90-4cb6-9778-ea17ef5bd3a0}" port="{fd3a411c-cfe4-40b5-a8a2-7434631a9ae1}"/>
+    <destination node="{d1870f0a-f305-41c6-a9e3-3f014736f2e6}" port="{48f0f4fa-70ac-4a29-acd2-7332a4402674}"/>
+  </connection>
+  <connection type="table" uuid="{d6de4dae-ae23-4247-b8e5-2d8029ea5c43}">
+    <source node="{f2b66d8b-2108-4873-be8f-6002772ed6f3}" port="{7dfe6dff-1902-455e-b831-a8473f602fb0}"/>
+    <destination node="{2776bcba-a146-405e-b007-70ba07aa82dc}" port="{b8214867-5ab1-4475-b313-558a7c4856ec}"/>
+  </connection>
+  <connection type="table" uuid="{f28f04be-0c37-4471-9546-6d17670d5a3d}">
+    <source node="{7aaee436-4656-409d-8336-dccb92f4e5f1}" port="{99f963e1-4f87-4d88-9cb4-7a01b3fac886}"/>
+    <destination node="{4c9f41c7-0bd8-49ef-b2bb-8d08403af27b}" port="{1590b15d-e797-4d4d-9a20-ae8a959ec6cc}"/>
+  </connection>
+</flow>

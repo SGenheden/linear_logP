@@ -1,6 +1,14 @@
-# On the use of linear models to predict water/octanol partition coefficients
+# On the use of linear models to predict partition coefficients
 
-Project in the MSG500 course, autumn 2017
+Simple and extensive linear models to predict water/octanol partition coefficients for small molecules.
+
+## Models
+
+There are two models in two subfolders:
+
+* `model` - the extensive modelling efforts in the MSG500 course (autumn 2017)
+
+* `phys` - simple model presented at my docent lecture and at the [Combine Engineering Journal](https://statsletters.com)
 
 ## Experimental data
 
@@ -26,4 +34,6 @@ The indices of the molecules in the *training* data that is also in the *test* d
 python props/compare_smi.py training.xlsx testing.xlsx
 ```
 
-and the indicies are available in `overlap.dat`
+and the indices are available in `overlap.dat`
+
+The experimental training data *without* this overlap is available in `training_filtered.xlsx`.

@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='ASCII'?>
+<flow xmlns="http://www.sysess.org/sympathyfordata/workflow/1.0" cls="Flow" height="50.0" id="" is_locked="False" uuid="{c2732b89-9fd0-4ac3-ab5c-6f26b4d8b928}" width="50.0" x="0.0" y="0.0">
+  <label></label>
+  <description></description>
+  <author></author>
+  <copyright></copyright>
+  <version></version>
+  <min_version></min_version>
+  <icon/>
+  <aggregation type="json">null</aggregation>
+  <libraries type="json">[]</libraries>
+  <pythonpaths type="json">[]</pythonpaths>
+  <overrides type="json">{}</overrides>
+  <parameters type="json">{}</parameters>
+  <ports/>
+  <flow cls="Flow" height="50.0" id="" is_locked="False" uuid="{2e27a44f-093c-404c-842d-2a553edb0997}" width="50.0" x="1725.0" y="1600.0">
+    <label>Remove overlap with F(x)</label>
+    <description></description>
+    <author></author>
+    <copyright></copyright>
+    <version></version>
+    <min_version></min_version>
+    <icon/>
+    <aggregation type="json">null</aggregation>
+    <libraries type="json">[]</libraries>
+    <pythonpaths type="json">[]</pythonpaths>
+    <overrides type="json">{}</overrides>
+    <environment type="json">{}</environment>
+    <parameters type="json">{"environment": {}}</parameters>
+    <ports>
+      <input index="0" key="Port" optional="False" parent="True" scheme="hdf5" type="table" uuid="{f6aa0840-2f50-4c9c-a991-cc1670152e43}" x="1775.0" y="1862.5">
+        <label>Port</label>
+        <description>Port</description>
+      </input>
+      <input index="1" key="Port" optional="False" parent="True" scheme="hdf5" type="table" uuid="{26b655ef-7888-4ba7-bf7d-67d2b3564610}" x="1775.0" y="1937.5">
+        <label>Port</label>
+        <description>Port</description>
+      </input>
+    </ports>
+    <node id="org.sysess.sympathy.tuple.tuple2" uuid="{3c28f420-5982-48c2-ad07-9db9bb60a1df}" x="1875.0" y="1900.0">
+      <label>Tuple</label>
+      <description></description>
+      <author>Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+      <copyright>(C) 2017 System Engineering Software Society</copyright>
+      <version>1.0</version>
+      <parameters type="json">{"type": "group"}</parameters>
+      <ports>
+        <input key="input" scheme="hdf5" type="table" type_base="&lt;a&gt;" uuid="{904a0142-6110-4bd1-a41e-c503ba3d1a13}">
+          <label>Input</label>
+          <description>Input</description>
+        </input>
+        <input key="input" scheme="hdf5" type="table" type_base="&lt;b&gt;" uuid="{4322bf23-0a79-4fa9-9098-8ff28b7f4f92}">
+          <label>Input</label>
+          <description>Input</description>
+        </input>
+        <output key="output" scheme="hdf5" type="(table, table)" type_base="(&lt;a&gt;, &lt;b&gt;)" uuid="{5cd8d424-9240-46ad-a160-d25129ee6e27}">
+          <label>Output</label>
+          <description>Output</description>
+        </output>
+      </ports>
+    </node>
+    <node id="org.sysess.sympathy.datasources.filedatasource" uuid="{422bcbf8-53d1-4c34-b684-49dc1461c3bb}" x="1875.0" y="1825.0">
+      <label>Datasource</label>
+      <description>Select a data source.</description>
+      <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+      <copyright>(C) 2013 System Engineering Software Society</copyright>
+      <version>1.1</version>
+      <parameters type="json">{"type": "group", "filename": {"description": "A filename including path if needed", "label": "Filename", "order": 0, "type": "string", "value": "exclude_rows.py", "editor": {"states": null, "type": "filename", "filter": ["Any files (*)"]}}, "db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "editor": null, "label": "SQLAlchemy engine URL", "order": 1, "type": "string", "value": "mssql+pyodbc:///"}, "db_method": {"description": "Select which Database connection method that you want to use.", "label": "Database connection method", "order": 2, "type": "string", "value": "ODBC", "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": ["ODBC", "SQLAlchemy"]}}, "db_driver": {"description": "Database driver to use.", "label": "Database driver", "mode": "selected", "order": 3, "passthrough": false, "type": "list", "list": ["SQL Server"], "value": [0], "value_names": ["SQL Server"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "db_servername": {"description": "A valid name to a database server.", "editor": null, "label": "Server name", "order": 4, "type": "string", "value": ""}, "db_databasename": {"description": "The name of the database.", "editor": null, "label": "Database name", "order": 5, "type": "string", "value": ""}, "db_user": {"description": "A valid database user.", "editor": null, "label": "User", "order": 6, "type": "string", "value": ""}, "db_password": {"description": "A valid password for the selected user.", "editor": null, "label": "Password", "order": 7, "type": "string", "value": ""}, "db_connection_string": {"description": "A connection string that will override other settings.", "editor": null, "label": "Connection string", "order": 8, "type": "string", "value": ""}, "datasource_type": {"description": "Type of datasource.", "editor": null, "label": "Datasource type", "mode": "selected", "order": 9, "passthrough": false, "type": "list", "list": ["File", "Database"], "value": [0], "value_names": ["File"]}}</parameters>
+      <ports>
+        <output key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{8f461af3-4ecd-4f25-9764-a6448cfc1ba8}">
+          <label>Datasource with path to file</label>
+          <description>Datasource with path to file</description>
+        </output>
+      </ports>
+    </node>
+    <node id="org.sysess.sympathy.data.fx" uuid="{9cb9edf4-59c7-463d-9e42-eba74f25ed3c}" x="2000.0" y="1825.0">
+      <label>F(x)</label>
+      <description>Select and apply functions to item.</description>
+      <author>Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+      <copyright>(C) 2016 System Engineering Software Society</copyright>
+      <version>1.0</version>
+      <parameters type="json">{"type": "group", "copy_input": {"description": "If enabled the incoming data will be copied to the output before running the nodes.", "editor": null, "label": "Copy input", "order": 0, "type": "boolean", "value": false}, "selected_functions": {"description": "Choose one or many of the listed functions to apply to the content of the incoming item.", "label": "Select functions", "mode": "selected", "order": 1, "passthrough": false, "type": "list", "list": ["ExcludeRows"], "value": [0], "value_names": ["ExcludeRows"], "editor": {"edit": false, "filter": true, "mode": true, "passthrough": true, "selection": "multi", "type": "listview"}}}</parameters>
+      <ports>
+        <input key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{6b1d350c-1ba7-4649-a2c7-68a7de955eba}">
+          <label>Path to Python file with scripted functions.</label>
+          <description>Path to Python file with scripted functions.</description>
+        </input>
+        <input key="port2" scheme="hdf5" type="(table, table)" type_base="&lt;a&gt;" uuid="{4264acd3-fda6-418e-a674-ef7c15a76b59}">
+          <label>Item with data to apply functions on</label>
+          <description>Item with data to apply functions on</description>
+        </input>
+        <output key="port3" scheme="hdf5" type="(table, table)" type_base="&lt;a&gt;" uuid="{213e76c3-354e-4840-b80b-f3fdca076d5a}">
+          <label>Item with the results from the applied functions</label>
+          <description>Item with the results from the applied functions</description>
+        </output>
+      </ports>
+    </node>
+    <node id="org.sysess.sympathy.tuple.untuple2" uuid="{d8d76c0b-e0e3-438c-965d-9b61435d1281}" x="2150.0" y="1825.0">
+      <label>Untuple</label>
+      <description></description>
+      <author>Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+      <copyright>(C) 2017 System Engineering Software Society</copyright>
+      <version>1.0</version>
+      <parameters type="json">{"type": "group"}</parameters>
+      <ports>
+        <input key="input" scheme="hdf5" type="(table, table)" type_base="(&lt;a&gt;, &lt;b&gt;)" uuid="{472b9a84-c4e3-49ba-b08f-38e9bebf8a89}">
+          <label>Input</label>
+          <description>Input</description>
+        </input>
+        <output key="output" scheme="hdf5" type="table" type_base="&lt;a&gt;" uuid="{665c1a11-c746-4279-86a1-58d99061225a}">
+          <label>Output</label>
+          <description>Output</description>
+        </output>
+        <output key="output" scheme="hdf5" type="table" type_base="&lt;b&gt;" uuid="{d46e3294-c7fd-40b1-ad97-88eb4a52d18c}">
+          <label>Output</label>
+          <description>Output</description>
+        </output>
+      </ports>
+    </node>
+    <connection type="table" uuid="{421ca2e0-6627-418e-ae3c-71bd8dd553a6}">
+      <source node="{2e27a44f-093c-404c-842d-2a553edb0997}" port="{f6aa0840-2f50-4c9c-a991-cc1670152e43}"/>
+      <destination node="{3c28f420-5982-48c2-ad07-9db9bb60a1df}" port="{4322bf23-0a79-4fa9-9098-8ff28b7f4f92}"/>
+    </connection>
+    <connection type="(table, table)" uuid="{55fcc9f1-b3c6-4bd4-bfb3-06de260bf683}">
+      <source node="{9cb9edf4-59c7-463d-9e42-eba74f25ed3c}" port="{213e76c3-354e-4840-b80b-f3fdca076d5a}"/>
+      <destination node="{d8d76c0b-e0e3-438c-965d-9b61435d1281}" port="{472b9a84-c4e3-49ba-b08f-38e9bebf8a89}"/>
+    </connection>
+    <connection type="datasource" uuid="{6c68d5eb-8de3-4016-a0f6-573266f029e1}">
+      <source node="{422bcbf8-53d1-4c34-b684-49dc1461c3bb}" port="{8f461af3-4ecd-4f25-9764-a6448cfc1ba8}"/>
+      <destination node="{9cb9edf4-59c7-463d-9e42-eba74f25ed3c}" port="{6b1d350c-1ba7-4649-a2c7-68a7de955eba}"/>
+    </connection>
+    <connection type="table" uuid="{b9e9c9e9-bc95-41bc-ad7e-78703cc7c850}">
+      <source node="{2e27a44f-093c-404c-842d-2a553edb0997}" port="{26b655ef-7888-4ba7-bf7d-67d2b3564610}"/>
+      <destination node="{3c28f420-5982-48c2-ad07-9db9bb60a1df}" port="{904a0142-6110-4bd1-a41e-c503ba3d1a13}"/>
+    </connection>
+    <connection type="(table, table)" uuid="{bb91c5a0-cd18-4257-a08f-02963d15da90}">
+      <source node="{3c28f420-5982-48c2-ad07-9db9bb60a1df}" port="{5cd8d424-9240-46ad-a160-d25129ee6e27}"/>
+      <destination node="{9cb9edf4-59c7-463d-9e42-eba74f25ed3c}" port="{4264acd3-fda6-418e-a674-ef7c15a76b59}"/>
+    </connection>
+  </flow>
+  <node id="org.sysess.sympathy.data.table.importtable" uuid="{13e03aef-eec1-4bec-936b-883448455a8d}" x="1575.0" y="1750.0">
+    <label>Table</label>
+    <description>Data source as a table</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+    <copyright>(C) 2013 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "active_importer": {"description": "", "editor": null, "label": "", "order": 0, "type": "string", "value": "CSV"}, "custom_importer_data": {"label": "", "order": 1, "type": "group", "Auto": {"label": "", "order": 0, "type": "group"}, "CSV": {"label": "", "type": "group", "data_end_row": {"description": "The data rows.", "label": "", "type": "integer", "value": 0, "editor": {"max": 9999999, "min": 0, "step": 1, "type": "spinbox"}}, "data_start_row": {"description": "The first row where data is stored.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "delimiter": {"description": "", "editor": null, "label": "", "type": "string", "value": ";"}, "description_row": {"description": "The row where the descriptions are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "descriptions": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": false}, "double_quotations": {"description": "Remove double quotations in importation.", "editor": null, "label": "Remove double quotations", "type": "boolean", "value": false}, "end_of_file": {"description": "Select all rows to the end of the file.", "editor": null, "label": "", "type": "boolean", "value": true}, "exceptions": {"description": "Select method to handle eventual errors", "label": "How to handle failed importation:", "mode": "selected", "passthrough": false, "type": "list", "list": ["Raise Exceptions", "Partially read file", "Read file without delimiters"], "value": [0], "value_names": ["Raise Exceptions"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "header_row": {"description": "The row where the headers are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "headers": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": false}, "no_preview_rows": {"description": "The number of preview rows to show.", "label": "Number of preview rows", "type": "integer", "value": 20, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "other_delimiter": {"description": "Enter other delimiter than the standard ones.", "editor": null, "label": "", "type": "string", "value": ""}, "preview_start_row": {"description": "The first row where data will review from.", "label": "Preview start row", "type": "integer", "value": 1, "editor": {"max": 500, "min": 1, "step": 1, "type": "spinbox"}}, "read_selection": {"description": "Select how to read the data", "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": ["Read to the end of file", "Read specified number of rows", "Read to specified number of rows from the end"], "value": [0], "value_names": ["Read to the end of file"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "source_coding": {"description": "", "editor": null, "label": "", "type": "string", "value": "utf_8"}, "transposed": {"description": "Transpose the data.", "editor": null, "label": "Transpose input data", "type": "boolean", "value": false}, "unit_row": {"description": "The row where the units are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "units": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": false}}, "HDF5": {"label": "", "type": "group", "path_list": {"description": "The paths selected to import data from.", "label": "Selected paths", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": [], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}, "MAT": {"label": "", "type": "group", "data_end_row": {"description": "The data rows.", "label": "", "type": "integer", "value": 0, "editor": {"max": 9999999, "min": 0, "step": 1, "type": "spinbox"}}, "data_start_row": {"description": "The first row where data is stored.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "end_of_file": {"description": "Select all rows to the end of the file.", "editor": null, "label": "", "type": "boolean", "value": true}, "exceptions": {"description": "Select method to handle eventual errors", "label": "How to handle failed importation:", "mode": "selected", "passthrough": false, "type": "list", "list": ["Raise Exceptions", "Partially read file", "Read file without delimiters"], "value": [0], "value_names": ["Raise Exceptions"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "no_preview_rows": {"description": "The number of preview rows to show.", "label": "Number of preview rows", "type": "integer", "value": 20, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "preview_start_row": {"description": "The first row where data will review from.", "label": "Preview start row", "type": "integer", "value": 1, "editor": {"max": 500, "min": 1, "step": 1, "type": "spinbox"}}, "read_selection": {"description": "Select how to read the data", "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": ["Read to the end of file", "Read specified number of rows", "Read to specified number of rows from the end"], "value": [0], "value_names": ["Read to the end of file"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}, "SQL": {"label": "", "type": "group", "odbc": {"description": "ODBC method to use.", "label": "ODBC method", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["default", "pyodbc", "ceODBC"], "value": [0], "value_names": ["default"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "custom_query": {"description": "", "editor": null, "label": "", "type": "boolean", "value": false}, "join_column_selection": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}, "join_columns": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}, "join_tables": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}, "lineedit_query": {"description": "", "editor": null, "label": "", "type": "boolean", "value": false}, "preview_query": {"description": "", "editor": null, "label": "", "type": "string", "value": ""}, "query_str": {"description": "", "editor": null, "label": "", "type": "string", "value": ""}, "table_columns": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}, "table_names": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": ["test"], "value": [0], "value_names": ["test"]}, "table_query": {"description": "", "editor": null, "label": "", "type": "boolean", "value": true}, "where_add_comparison": {"description": "", "editor": null, "label": "", "type": "string", "value": ""}, "where_column_combo": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}, "where_comparison_combo": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": ["=", "&lt;", "&gt;", "&gt;=", "&lt;=", "!=", " LIKE ", " GLOB ", " BETWEEN "], "value": [0], "value_names": ["="]}, "where_condition": {"description": "", "editor": null, "label": "", "type": "string", "value": ""}, "where_condition_list": {"description": "", "editor": null, "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": []}}, "Table": {"label": "", "type": "group"}, "XLS": {"label": "", "type": "group", "data_end_row": {"description": "The last data row.", "label": "", "type": "integer", "value": 0, "editor": {"max": 9999999, "min": 0, "step": 1, "type": "spinbox"}}, "data_start_row": {"description": "The first row where data is stored.", "label": "", "type": "integer", "value": 2, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "description_row": {"description": "The row where the descriptions are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "descriptions": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": false}, "end_of_file": {"description": "Select all rows to the end of the file.", "editor": null, "label": "", "type": "boolean", "value": true}, "header_row": {"description": "The row where the headers are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "headers": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": true}, "no_preview_rows": {"description": "The number of preview rows to show.", "label": "Number of preview rows", "type": "integer", "value": 20, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "preview_start_row": {"description": "The first row where data will review from.", "label": "Preview start row", "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "read_selection": {"description": "Select how to read the data", "label": "", "mode": "selected", "passthrough": false, "type": "list", "list": ["Read to the end of file", "Read specified number of rows", "Read to specified number of rows from the end"], "value": [0], "value_names": ["Read to the end of file"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "transposed": {"description": "Transpose the data.", "editor": null, "label": "Transpose input", "type": "boolean", "value": false}, "unit_row": {"description": "The row where the units are located.", "label": "", "type": "integer", "value": 1, "editor": {"max": 99999, "min": 1, "step": 1, "type": "spinbox"}}, "units": {"description": "File has headers.", "editor": null, "label": "", "type": "boolean", "value": false}, "worksheet_name": {"description": "The worksheet to import from.", "label": "Select worksheet", "mode": "selected", "passthrough": false, "type": "list", "list": [], "value": [], "value_names": [], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}}, "fail_strategy": {"description": "Decide how failure to import a file should be handled.", "label": "Action on import failure", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Exception", "Create Empty Entry"], "value": [0], "value_names": ["Exception"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{cdc0682e-65fc-4c22-965b-40dd5f5e2b85}">
+        <label>Datasource</label>
+        <description>Datasource</description>
+      </input>
+      <output key="port1" scheme="hdf5" type="table" type_base="table" uuid="{63dc5527-5137-4fb3-a6f8-79f26a289ca4}">
+        <label>Imported Table</label>
+        <description>Imported Table</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.importtable" uuid="{363b74bd-6167-4cb6-8b4b-01510cec3dbd}" x="1575.0" y="1850.0">
+    <label>Table</label>
+    <description>Data source as a table</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+    <copyright>(C) 2013 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "active_importer": {"description": "", "editor": null, "label": "", "order": 0, "type": "string", "value": "XLS"}, "fail_strategy": {"description": "", "label": "Action on import failure", "order": 0, "passthrough": false, "type": "list", "list": ["Exception", "Create Empty Entry", "Skip File"], "value": [0], "value_names": [], "editor": {"type": "combobox"}}, "custom_importer_data": {"label": "", "order": 1, "type": "group", "Auto": {"label": "", "order": 0, "type": "group"}, "CSV": {"type": "group", "description_row": {"description": "The row where the descriptions are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "transposed": {"description": "Transpose the data.", "editor": null, "label": "Transpose input data", "order": 0, "type": "boolean", "value": false}, "data_start_row": {"description": "The first row where data is stored.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 500, "min": 1, "step": 1, "type": "spinbox"}}, "data_end_row": {"description": "The last data row.", "label": "", "order": 0, "type": "integer", "value": 0, "editor": {"max": 500, "min": 0, "step": 1, "type": "spinbox"}}, "source_coding": {"description": "", "editor": null, "label": "", "order": 0, "type": "string", "value": null}, "other_delimiter": {"description": "Enter other delimiter than the standard ones.", "editor": null, "label": "", "order": 0, "type": "string", "value": " "}, "header_row": {"description": "The row where the headers are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "double_quotations": {"description": "Remove double quotations in importation.", "editor": null, "label": "Remove double quotations", "order": 0, "type": "boolean", "value": false}, "preview_start_row": {"description": "The first row where data will review from.", "label": "Preview start row", "order": 0, "type": "integer", "value": 1, "editor": {"max": 500, "min": -500, "step": 1, "type": "spinbox"}}, "delimiter": {"description": "", "editor": null, "label": "", "order": 0, "type": "string", "value": null}, "no_preview_rows": {"description": "The number of preview rows to show.", "label": "Number of preview rows", "order": 0, "type": "integer", "value": 20, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "descriptions": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": false}, "units": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": false}, "end_of_file": {"description": "Select all rows to the end of the file.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": true}, "unit_row": {"description": "The row where the units are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "headers": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": null}}, "HDF5": {"type": "group", "path_list": {"description": "The paths selected to import data from.", "label": "Selected paths", "order": 0, "passthrough": false, "type": "list", "list": [], "value": [], "value_names": [], "editor": {"type": "combobox"}}}, "SQL": {"type": "group"}, "Table": {"type": "group"}, "XLS": {"type": "group", "description_row": {"description": "The row where the descriptions are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "transposed": {"description": "Transpose the data.", "editor": null, "label": "Transpose input", "order": 0, "type": "boolean", "value": false}, "data_start_row": {"description": "The first row where data is stored.", "label": "", "order": 0, "type": "integer", "value": 2, "editor": {"max": 500, "min": 1, "step": 1, "type": "spinbox"}}, "data_end_row": {"description": "The last data row.", "label": "", "order": 0, "type": "integer", "value": 0, "editor": {"max": 500, "min": 0, "step": 1, "type": "spinbox"}}, "worksheet_name": {"description": "The worksheet to import from.", "label": "Select worksheet", "order": 0, "passthrough": false, "type": "list", "list": ["data"], "value": [0], "value_names": [], "editor": {"type": "combobox"}}, "preview_start_row": {"description": "The first row where data will review from.", "label": "Preview start row", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "header_row": {"description": "The row where the headers are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "headers": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": true}, "no_preview_rows": {"description": "The number of preview rows to show.", "label": "Number of preview rows", "order": 0, "type": "integer", "value": 20, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}, "descriptions": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": false}, "units": {"description": "File has headers.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": false}, "end_of_file": {"description": "Select all rows to the end of the file.", "editor": null, "label": "", "order": 0, "type": "boolean", "value": true}, "unit_row": {"description": "The row where the units are located.", "label": "", "order": 0, "type": "integer", "value": 1, "editor": {"max": 200, "min": 1, "step": 1, "type": "spinbox"}}}}}</parameters>
+    <ports>
+      <input key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{99c9c805-c87f-4042-815a-2d88c1c02b23}">
+        <label>Datasource</label>
+        <description>Datasource</description>
+      </input>
+      <output key="port1" scheme="hdf5" type="table" type_base="table" uuid="{166bca32-2c6f-4bba-8703-30b167ffa710}">
+        <label>Imported Table</label>
+        <description>Imported Table</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.export.exporttables" uuid="{4ef23e22-7e94-4340-a939-bc0da7596774}" x="1975.0" y="1825.0">
+    <label>Export Tables</label>
+    <description>Export Tables</description>
+    <author>Alexander Busck &lt;alexander.busck@combine.se&gt;</author>
+    <copyright>(c) 2013 System Engineering Software Society</copyright>
+    <version>0.1</version>
+    <parameters type="json">{"type": "group", "active_exporter": {"description": "Select data format exporter. Each data format has its own exporter with its own special configuration, see exporter information. The selection of exporter do also suggest filename extension.", "editor": null, "label": "Exporter", "order": 0, "type": "string", "value": "XLSX"}, "custom_exporter_data": {"label": "", "order": 1, "type": "group", "CSV": {"label": "", "type": "group", "encoding": {"description": "Character encoding determines how different characters are represented when written to disc, sent over a network, etc.", "label": "Character encoding", "mode": "selected", "passthrough": false, "type": "list", "list": ["Western (ASCII)", "Western (ISO 8859-1)", "Western (ISO 8859-15)", "Western (Windows 1252)", "UTF-8", "UTF-8 with signature byte"], "value": [4], "value_names": ["UTF-8"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "csv"}, "header": {"description": "Export column names", "editor": null, "label": "Export header", "type": "boolean", "value": true}, "table_names": {"description": "Use table names as filenames", "editor": null, "label": "Use table names as filenames", "type": "boolean", "value": false}}, "HDF5": {"label": "", "type": "group", "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "sydata"}, "table_names": {"description": "Use table names as filenames", "editor": null, "label": "Use table names as filenames", "type": "boolean", "value": false}}, "MAT": {"label": "", "type": "group", "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "mat"}, "header": {"description": "Export column names", "editor": null, "label": "Export header", "type": "boolean", "value": true}, "table_names": {"description": "Use table names as filenames", "editor": null, "label": "Use table names as filenames", "type": "boolean", "value": false}}, "SQL": {"label": "", "type": "group", "odbc": {"description": "ODBC method to use.", "label": "ODBC method", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["default", "pyodbc", "ceODBC"], "value": [0], "value_names": ["default"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "connection_string": {"description": "String used by pyodbc to make a connection.", "editor": null, "label": "Connection string", "type": "string", "value": ""}, "db_method": {"description": "Select which Database connection method that you want to use.", "label": "Database connection method", "type": "string", "value": "ODBC", "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": ["ODBC", "SQLAlchemy"]}}, "db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "editor": null, "label": "SQLAlchemy engine URL", "type": "string", "value": "mssql+pyodbc:///"}, "drop_table": {"description": "Drop table before adding data.", "editor": null, "label": "Drop table", "type": "boolean", "value": false}, "table_name": {"description": "The table name used when exporting.", "editor": null, "label": "Table name", "type": "string", "value": ""}, "use_nvarchar_size": {"description": "Use nvarchar(size) instead of nvarchar(MAX).", "editor": null, "label": "Use nvarchar(size)", "type": "boolean", "value": false}}, "SQLite": {"label": "", "type": "group", "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "db"}}, "XLS": {"label": "", "type": "group", "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "xls"}, "header": {"description": "Export column names", "editor": null, "label": "Export header", "type": "boolean", "value": true}}, "XLSX": {"label": "", "type": "group", "filename_extension": {"description": "", "editor": null, "label": "Filename extension", "type": "string", "value": "xlsx"}, "header": {"description": "Export column names", "editor": null, "label": "Export header", "type": "boolean", "value": true}, "table_names": {"description": "Use table names as filenames", "editor": null, "label": "Use table names as filenames", "type": "boolean", "value": false}, "to_plot": {"description": "Select if incoming Tables with plot data should be embedded in the output file. If no plots are present, the option is disabled.", "editor": null, "label": "Embed plot in output file(s)", "type": "boolean", "value": false}, "to_sheets": {"description": "Select if incoming Tables are going to to be exported to sheets in a single file or to a single sheet inmultiple files.", "editor": null, "label": "Export data to sheets", "type": "boolean", "value": true}}}, "directory": {"description": "Select the directory where to export the files.", "label": "Output directory", "order": 2, "type": "string", "value": "..", "editor": {"states": null, "type": "dirname"}}, "filename": {"description": "Filename without extension.", "editor": null, "label": "Filename", "order": 3, "type": "string", "value": "training_filtered"}, "plot": {"description": "If there is a plot attribute in the input tables(s), create a separate file with the plot.", "label": "Output separate plot file with the following extension:", "mode": "selected", "order": 4, "passthrough": false, "type": "list", "list": ["-", "eps", "pdf", "svg", "png"], "value": [0], "value_names": ["-"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="port0" scheme="hdf5" type="[table]" type_base="[table]" uuid="{ba8b9296-e5f8-4324-869e-6ecd37f12325}">
+        <label>Tables to be exported</label>
+        <description>Tables to be exported</description>
+      </input>
+      <output key="port0" scheme="text" type="[datasource]" type_base="[datasource]" uuid="{4218a02c-9d90-46cf-b1fc-6adf7effda30}">
+        <label>Datasources of exported files</label>
+        <description>Datasources of exported files</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.datasources.filedatasource" uuid="{71111982-f712-4073-b4f7-b08954a1ee17}" x="1450.0" y="1850.0">
+    <label>training.xlsx</label>
+    <description>Select a data source.</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+    <copyright>(C) 2013 System Engineering Software Society</copyright>
+    <version>1.1</version>
+    <parameters type="json">{"type": "group", "use_relative_path": {"description": "Use the relative path to the file.", "editor": null, "label": "Use relative path", "order": 0, "type": "boolean", "value": false}, "filename": {"description": "A filename including path if needed", "label": "Filename", "order": 0, "type": "string", "value": "../training.xlsx", "editor": {"states": null, "type": "filename", "filter": ["Any files (*)"]}}, "db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "editor": null, "label": "SQLAlchemy engine URL", "order": 1, "type": "string", "value": "mssql+pyodbc:///"}, "db_method": {"description": "Select which Database connection method that you want to use.", "label": "Database connection method", "order": 2, "type": "string", "value": "ODBC", "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": ["ODBC", "SQLAlchemy"]}}, "db_driver": {"description": "Database driver to use.", "label": "Database driver", "mode": "selected", "order": 3, "passthrough": false, "type": "list", "list": ["SQL Server"], "value": [0], "value_names": ["SQL Server"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "db_servername": {"description": "A valid name to a database server.", "editor": null, "label": "Server name", "order": 4, "type": "string", "value": ""}, "db_databasename": {"description": "The name of the database.", "editor": null, "label": "Database name", "order": 5, "type": "string", "value": ""}, "db_user": {"description": "A valid database user.", "editor": null, "label": "User", "order": 6, "type": "string", "value": ""}, "db_password": {"description": "A valid password for the selected user.", "editor": null, "label": "Password", "order": 7, "type": "string", "value": ""}, "db_connection_string": {"description": "A connection string that will override other settings.", "editor": null, "label": "Connection string", "order": 8, "type": "string", "value": ""}, "datasource_type": {"description": "Type of datasource.", "editor": null, "label": "Datasource type", "mode": "selected", "order": 9, "passthrough": false, "type": "list", "list": ["File", "Database"], "value": [0], "value_names": ["File"]}}</parameters>
+    <ports>
+      <output key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{3004eb91-cfbe-4853-b274-08bf3eeb8307}">
+        <label>Datasource with path to file</label>
+        <description>Datasource with path to file</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.filters.columnfilternode" uuid="{b15759e7-85da-4709-bf4b-b8213a108dd3}" x="1725.0" y="1825.0">
+    <label>Remove overlap</label>
+    <description>Filter column using Tables.</description>
+    <author>Alexander Busck &lt;alexander.busck@combine.se&gt;</author>
+    <copyright>(c) 2013 System Engineering Software Society</copyright>
+    <version>1.1</version>
+    <parameters type="json">{"type": "group", "c0_column": {"description": "Select the column in Table1, upper port, to use as reference column C0 in the comparison.", "label": "Select C0 column", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["X0"], "value": [0], "value_names": ["X0"], "editor": {"display": null, "edit": true, "include_empty": false, "type": "combobox", "options": []}}, "c1_column": {"description": "Select the column in Table2, lower port, to use as object column C1 in the comparison.", "label": "Select C1 column", "mode": "selected", "order": 1, "passthrough": false, "type": "list", "list": ["Nr", "Smiles", "CAS", "Partition", "Weight", "HA", "CA", "PA", "Rings", "HBD", "HBA", "GI"], "value": [0], "value_names": ["Nr"], "editor": {"display": null, "edit": true, "include_empty": false, "type": "combobox", "options": []}}, "filter_functions": {"description": "All available pre-defined filter functions.", "label": "Select filter function", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Match C1 in C0", "Don't match C1 in C0"], "value": [0], "value_names": ["Match C1 in C0"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "use_custom_predicate": {"description": "Use a custom filter (predicate) function to filter.", "editor": null, "label": "Use custom filter function", "order": 3, "type": "boolean", "value": true}, "predicate_function": {"description": "The predicate function to use when filtering.", "editor": null, "label": "Filter function", "order": 4, "type": "string", "value": "lambda x: x not in C0"}}</parameters>
+    <ports>
+      <input key="port0" scheme="hdf5" type="table" type_base="table" uuid="{07698211-6f92-4cbe-928c-309923e25e20}">
+        <label>Table with column, C0, with reference values</label>
+        <description>Table with column, C0, with reference values</description>
+      </input>
+      <input key="port1" scheme="hdf5" type="table" type_base="table" uuid="{5e9d8bc9-6d80-4ac6-b1bd-bb1d500d33dd}">
+        <label>Table with column, C1</label>
+        <description>Table with column, C1</description>
+      </input>
+      <output key="port0" scheme="hdf5" type="table" type_base="table" uuid="{23d340b7-2dab-4f6b-a60c-bedf7657d3f0}">
+        <label>Filtered Table</label>
+        <description>Filtered Table</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.indextable" uuid="{c7e45d7c-2aaa-4aff-8f33-4dd6427103cf}" x="1725.0" y="1725.0">
+    <label>Remove overlap</label>
+    <description>Uses index-table to perform row indexation from value-table.
+No other datatypes than integer or boolean are allowed in the index column</description>
+    <author>Mathias Broxvall</author>
+    <copyright>(C) 2018 Combine Control Systems AB</copyright>
+    <version>0.1</version>
+    <parameters type="json">{"type": "group", "index column": {"description": "Select column used for indexing.", "label": "Select indexing column", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["X0"], "value": [0], "value_names": ["X0"], "editor": {"edit": false, "filter": true, "type": "listview"}}, "at_one": {"description": "Start indexing at one, otherwise at zero", "label": "Start at one", "order": 1, "type": "boolean", "value": true, "editor": {"edit": false, "filter": true, "type": "listview"}}, "operation": {"description": "If to include or exclude rows", "label": "Operation", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Include", "Exclude"], "value": [0], "value_names": ["Include"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="value" scheme="hdf5" type="table" type_base="table" uuid="{2a6a9c2b-467a-4b03-ba9e-66c76926e1c9}">
+        <label>Value table</label>
+        <description>Value table</description>
+      </input>
+      <input key="index" scheme="hdf5" type="table" type_base="table" uuid="{e8a84055-3d33-4036-a7f8-73e8226956e8}">
+        <label>Index table</label>
+        <description>Index table</description>
+      </input>
+      <output key="out" scheme="hdf5" type="table" type_base="table" uuid="{7f0cdc44-ed4a-435e-9c5c-634c1e7c94b8}">
+        <label>Result table</label>
+        <description>Result table</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.list.itemtolist" uuid="{ef5ade0e-2b50-4fe5-a0cd-55a1dcd28737}" x="1850.0" y="1825.0">
+    <label>Item to List</label>
+    <description></description>
+    <author>Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+    <copyright>(C) 2015 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "n": {"description": "Choose number of times to repeat items.", "editor": null, "label": "Repeat number of times", "order": 0, "type": "integer", "value": 1}}</parameters>
+    <ports>
+      <input key="item" scheme="hdf5" type="table" type_base="&lt;a&gt;" uuid="{5b6edac2-b90a-4b3a-a5c9-ef89a413aafb}">
+        <label>Input Item</label>
+        <description>Input Item</description>
+      </input>
+      <output key="list" scheme="hdf5" type="[table]" type_base="[&lt;a&gt;]" uuid="{439a06f2-ecdd-41b2-8cdf-e16d7ede49b8}">
+        <label>Item as List</label>
+        <description>Item as List</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.datasources.filedatasource" uuid="{efc01478-faff-41f4-9992-b903028c7181}" x="1450.0" y="1750.0">
+    <label>overlap.dat</label>
+    <description>Select a data source.</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;</author>
+    <copyright>(C) 2013 System Engineering Software Society</copyright>
+    <version>1.1</version>
+    <parameters type="json">{"type": "group", "filename": {"description": "A filename including path if needed", "label": "Filename", "order": 0, "type": "string", "value": "..\\overlap.dat", "editor": {"states": null, "type": "filename", "filter": ["Any files (*)"]}}, "db_sqlalchemy_engine_url": {"description": "SQLAlchemy engine URL for connecting to the database", "editor": null, "label": "SQLAlchemy engine URL", "order": 1, "type": "string", "value": "mssql+pyodbc:///"}, "db_method": {"description": "Select which Database connection method that you want to use.", "label": "Database connection method", "order": 2, "type": "string", "value": "ODBC", "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": ["ODBC", "SQLAlchemy"]}}, "db_driver": {"description": "Database driver to use.", "label": "Database driver", "mode": "selected", "order": 3, "passthrough": false, "type": "list", "list": ["SQL Server"], "value": [0], "value_names": ["SQL Server"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}, "db_servername": {"description": "A valid name to a database server.", "editor": null, "label": "Server name", "order": 4, "type": "string", "value": ""}, "db_databasename": {"description": "The name of the database.", "editor": null, "label": "Database name", "order": 5, "type": "string", "value": ""}, "db_user": {"description": "A valid database user.", "editor": null, "label": "User", "order": 6, "type": "string", "value": ""}, "db_password": {"description": "A valid password for the selected user.", "editor": null, "label": "Password", "order": 7, "type": "string", "value": ""}, "db_connection_string": {"description": "A connection string that will override other settings.", "editor": null, "label": "Connection string", "order": 8, "type": "string", "value": ""}, "datasource_type": {"description": "Type of datasource.", "editor": null, "label": "Datasource type", "mode": "selected", "order": 9, "passthrough": false, "type": "list", "list": ["File", "Database"], "value": [0], "value_names": ["File"]}}</parameters>
+    <ports>
+      <output key="port1" scheme="text" type="datasource" type_base="datasource" uuid="{33c2a6b3-e1a3-42fc-8201-5775513ee8f7}">
+        <label>Datasource with path to file</label>
+        <description>Datasource with path to file</description>
+      </output>
+    </ports>
+  </node>
+  <connection type="table" uuid="{35339ce8-db17-46bb-87d3-17a07694cace}">
+    <source node="{363b74bd-6167-4cb6-8b4b-01510cec3dbd}" port="{166bca32-2c6f-4bba-8703-30b167ffa710}"/>
+    <destination node="{b15759e7-85da-4709-bf4b-b8213a108dd3}" port="{5e9d8bc9-6d80-4ac6-b1bd-bb1d500d33dd}"/>
+  </connection>
+  <connection type="datasource" uuid="{69ca0fa7-5418-45a5-8fcf-830008c54766}">
+    <source node="{71111982-f712-4073-b4f7-b08954a1ee17}" port="{3004eb91-cfbe-4853-b274-08bf3eeb8307}"/>
+    <destination node="{363b74bd-6167-4cb6-8b4b-01510cec3dbd}" port="{99c9c805-c87f-4042-815a-2d88c1c02b23}"/>
+  </connection>
+  <connection type="table" uuid="{7d445888-fce0-4c56-9437-1a100677fe07}">
+    <source node="{13e03aef-eec1-4bec-936b-883448455a8d}" port="{63dc5527-5137-4fb3-a6f8-79f26a289ca4}"/>
+    <destination node="{2e27a44f-093c-404c-842d-2a553edb0997}" port="{26b655ef-7888-4ba7-bf7d-67d2b3564610}"/>
+  </connection>
+  <connection type="table" uuid="{80d80ed2-6c18-48f5-806a-45118a74e92f}">
+    <source node="{b15759e7-85da-4709-bf4b-b8213a108dd3}" port="{23d340b7-2dab-4f6b-a60c-bedf7657d3f0}"/>
+    <destination node="{ef5ade0e-2b50-4fe5-a0cd-55a1dcd28737}" port="{5b6edac2-b90a-4b3a-a5c9-ef89a413aafb}"/>
+  </connection>
+  <connection type="table" uuid="{90d158e0-1bdc-4732-9518-adfd5ce93c31}">
+    <source node="{363b74bd-6167-4cb6-8b4b-01510cec3dbd}" port="{166bca32-2c6f-4bba-8703-30b167ffa710}"/>
+    <destination node="{c7e45d7c-2aaa-4aff-8f33-4dd6427103cf}" port="{2a6a9c2b-467a-4b03-ba9e-66c76926e1c9}"/>
+  </connection>
+  <connection type="table" uuid="{94cd72b0-b564-4c64-a291-e4e74a1f526b}">
+    <source node="{13e03aef-eec1-4bec-936b-883448455a8d}" port="{63dc5527-5137-4fb3-a6f8-79f26a289ca4}"/>
+    <destination node="{b15759e7-85da-4709-bf4b-b8213a108dd3}" port="{07698211-6f92-4cbe-928c-309923e25e20}"/>
+  </connection>
+  <connection type="[table]" uuid="{9c6e0a0b-de79-493a-a07b-9ce1964485b0}">
+    <source node="{ef5ade0e-2b50-4fe5-a0cd-55a1dcd28737}" port="{439a06f2-ecdd-41b2-8cdf-e16d7ede49b8}"/>
+    <destination node="{4ef23e22-7e94-4340-a939-bc0da7596774}" port="{ba8b9296-e5f8-4324-869e-6ecd37f12325}"/>
+  </connection>
+  <connection type="table" uuid="{a7f9bc24-90fa-4632-8355-f2293da00eca}">
+    <source node="{13e03aef-eec1-4bec-936b-883448455a8d}" port="{63dc5527-5137-4fb3-a6f8-79f26a289ca4}"/>
+    <destination node="{c7e45d7c-2aaa-4aff-8f33-4dd6427103cf}" port="{e8a84055-3d33-4036-a7f8-73e8226956e8}"/>
+  </connection>
+  <connection type="datasource" uuid="{d44c9c0c-413a-4d5e-b2b5-a0064f43f821}">
+    <source node="{efc01478-faff-41f4-9992-b903028c7181}" port="{33c2a6b3-e1a3-42fc-8201-5775513ee8f7}"/>
+    <destination node="{13e03aef-eec1-4bec-936b-883448455a8d}" port="{cdc0682e-65fc-4c22-965b-40dd5f5e2b85}"/>
+  </connection>
+  <connection type="table" uuid="{edeff6fe-1d83-4ad0-831e-a9ed06bb4355}">
+    <source node="{363b74bd-6167-4cb6-8b4b-01510cec3dbd}" port="{166bca32-2c6f-4bba-8703-30b167ffa710}"/>
+    <destination node="{2e27a44f-093c-404c-842d-2a553edb0997}" port="{f6aa0840-2f50-4c9c-a991-cc1670152e43}"/>
+  </connection>
+</flow>

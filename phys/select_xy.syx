@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='ASCII'?>
+<flow xmlns="http://www.sysess.org/sympathyfordata/workflow/1.0" cls="Flow" height="50.0" id="" is_locked="False" uuid="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" width="50.0" x="2017.0" y="2275.0">
+  <label>Select X and Y</label>
+  <description></description>
+  <author></author>
+  <copyright></copyright>
+  <version></version>
+  <min_version></min_version>
+  <icon/>
+  <aggregation type="json">null</aggregation>
+  <libraries type="json">[]</libraries>
+  <pythonpaths type="json">[]</pythonpaths>
+  <overrides type="json">{}</overrides>
+  <environment type="json">{}</environment>
+  <parameters type="json">{"environment": {}}</parameters>
+  <ports>
+    <input index="0" key="Port" optional="False" parent="True" scheme="hdf5" type="table" uuid="{f87098ba-65fe-438c-8fdb-088fe2ebd1be}" x="1975.0" y="2175.0">
+      <label>Port</label>
+      <description>Port</description>
+    </input>
+    <output index="0" key="Port" optional="False" parent="True" scheme="hdf5" type="table" uuid="{d5e76ce2-862d-48ea-8ea9-aa9236bf4880}" x="2300.0" y="2175.0">
+      <label>Port</label>
+      <description>Port</description>
+    </output>
+    <output index="1" key="Port" optional="False" parent="True" scheme="hdf5" type="table" uuid="{c7cf58ee-dfd3-4e4e-b195-d74bfceeb237}" x="2300.0" y="2075.0">
+      <label>Port</label>
+      <description>Port</description>
+    </output>
+  </ports>
+  <node id="org.sysess.sympathy.data.table.calculatorgeneric" uuid="{3ceccb13-9d87-4070-b64b-571cd1231092}" x="2075.0" y="2175.0">
+    <label>Create Hbonds and Nonpolar</label>
+    <description>Performs user-defined python calculations</description>
+    <author>Greger Cronquist &lt;greger.cronquist@sysess.org&gt;, Magnus Sand&#233;n &lt;magnus.sanden@combine.se&gt;, Sara Gustafzelius &lt;sara.gustafzelius@combine.se&gt;, Benedikt Ziegler &lt;benedikt.ziegler@combine.se&gt;</author>
+    <copyright>(c) 2016 System Engineering Software Society</copyright>
+    <version>3.0</version>
+    <parameters type="json">{"type": "group", "calc_list": {"description": "List of calculations.", "editor": null, "label": "List of calculations", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["Hbonds = arg['HBA'] + arg['HBD'] #ENABLED:1", "Nonpolar = arg['CA'] / arg['HA'] #ENABLED:1"], "value": [], "value_names": []}, "copy_input": {"description": "If enabled the incoming data will be copied to the output before running the calculations. This requires that the results will all have the same length. An exception will be raised if the lengths of the outgoing results differ.", "editor": null, "label": "Copy input", "order": 1, "type": "boolean", "value": true}, "fail_strategy": {"description": "Decide how a failed calculation should be handled", "label": "Action on calculation failure", "mode": "selected", "order": 2, "passthrough": false, "type": "list", "list": ["Exception", "Skip calculation"], "value": [0], "value_names": ["Exception"], "editor": {"display": null, "edit": false, "include_empty": false, "type": "combobox", "options": []}}}</parameters>
+    <ports>
+      <input key="port0" scheme="hdf5" type="table" type_base="&lt;a&gt;" uuid="{74b7f934-e5bc-43d3-a702-f6b2337a989b}">
+        <label>Generic Input</label>
+        <description>Generic Input</description>
+      </input>
+      <output key="port1" scheme="hdf5" type="table" type_base="table" uuid="{c415b154-5172-43aa-a22c-29425fbd5aae}">
+        <label>Table with results from the calculations.</label>
+        <description>Table with results from the calculations.</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.selecttablecolumns" uuid="{a3837f12-7b79-457c-aadf-21050a84d2bd}" x="2075.0" y="2075.0">
+    <label>Select Partition</label>
+    <description>Select columns from input to propagate to output.</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;, Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+    <copyright>(c) 2013, 2017 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "columns": {"description": "Select columns.", "label": "Select columns", "mode": "selected", "order": 0, "passthrough": false, "type": "list", "list": ["Nr", "Smiles", "CAS", "Partition", "Weight", "HA", "CA", "PA", "Rings", "HBD", "HBA", "GI"], "value": [3], "value_names": ["Partition"], "editor": {"filter": true, "mode": true, "selection": "multi", "type": "listview"}}}</parameters>
+    <ports>
+      <input key="" scheme="hdf5" type="table" type_base="table" uuid="{b8780c31-cfeb-484e-8a2b-68abcb6e604d}">
+        <label>Input</label>
+        <description>Input</description>
+      </input>
+      <output key="" scheme="hdf5" type="table" type_base="table" uuid="{32234d1b-4bfd-487b-970d-a9aa2ed606fc}">
+        <label>Output</label>
+        <description>Output</description>
+      </output>
+    </ports>
+  </node>
+  <node id="org.sysess.sympathy.data.table.selecttablecolumns" uuid="{cb2c686c-1846-4042-8be1-9754577ca68e}" x="2200.0" y="2175.0">
+    <label>Select Weight, Hbondsand Nonpolar</label>
+    <description>Select columns from input to propagate to output.</description>
+    <author>Alexander Busck &lt;alexander.busck@sysess.org&gt;, Erik der Hagopian &lt;erik.hagopian@sysess.org&gt;</author>
+    <copyright>(c) 2013, 2017 System Engineering Software Society</copyright>
+    <version>1.0</version>
+    <parameters type="json">{"type": "group", "columns": {"description": "Select columns.", "label": "Select columns", "mode": "selected_exists", "order": 0, "passthrough": false, "type": "list", "list": ["Nr", "Smiles", "CAS", "Partition", "Weight", "HA", "CA", "PA", "Rings", "HBD", "HBA", "GI", "Hbonds", "Nonpolar"], "value": [12, 13, 4], "value_names": ["Hbonds", "Nonpolar", "Weight"], "editor": {"buttons": true, "filter": true, "invertbutton": true, "mode": true, "selection": "multi", "type": "listview"}}}</parameters>
+    <ports>
+      <input key="" scheme="hdf5" type="table" type_base="table" uuid="{e323b855-b3ef-4dd4-8f03-9b62c7092530}">
+        <label>Input</label>
+        <description>Input</description>
+      </input>
+      <output key="" scheme="hdf5" type="table" type_base="table" uuid="{d1e27dcf-e939-490d-bb6f-19c8d53919f6}">
+        <label>Output</label>
+        <description>Output</description>
+      </output>
+    </ports>
+  </node>
+  <connection type="table" uuid="{101dbddc-6d60-4089-9cee-162569b28f41}">
+    <source node="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" port="{f87098ba-65fe-438c-8fdb-088fe2ebd1be}"/>
+    <destination node="{3ceccb13-9d87-4070-b64b-571cd1231092}" port="{74b7f934-e5bc-43d3-a702-f6b2337a989b}"/>
+  </connection>
+  <connection type="table" uuid="{8d5e5d3d-da29-47ed-854f-7356df8350ca}">
+    <source node="{3ceccb13-9d87-4070-b64b-571cd1231092}" port="{c415b154-5172-43aa-a22c-29425fbd5aae}"/>
+    <destination node="{cb2c686c-1846-4042-8be1-9754577ca68e}" port="{e323b855-b3ef-4dd4-8f03-9b62c7092530}"/>
+  </connection>
+  <connection type="table" uuid="{90c80853-25b1-4ba7-b8d7-9e46eef47a10}">
+    <source node="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" port="{f87098ba-65fe-438c-8fdb-088fe2ebd1be}"/>
+    <destination node="{a3837f12-7b79-457c-aadf-21050a84d2bd}" port="{b8780c31-cfeb-484e-8a2b-68abcb6e604d}"/>
+  </connection>
+  <connection type="table" uuid="{b97e83a1-0b06-4e6e-b189-21f5924fe383}">
+    <source node="{a3837f12-7b79-457c-aadf-21050a84d2bd}" port="{32234d1b-4bfd-487b-970d-a9aa2ed606fc}"/>
+    <destination node="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" port="{c7cf58ee-dfd3-4e4e-b195-d74bfceeb237}"/>
+  </connection>
+  <connection type="table" uuid="{eb86b056-3967-4d2a-8a60-de7a7439b3bc}">
+    <source node="{cb2c686c-1846-4042-8be1-9754577ca68e}" port="{d1e27dcf-e939-490d-bb6f-19c8d53919f6}"/>
+    <destination node="{2e6b0086-cb6c-4fab-a106-656fa2c34d65}" port="{d5e76ce2-862d-48ea-8ea9-aa9236bf4880}"/>
+  </connection>
+</flow>
